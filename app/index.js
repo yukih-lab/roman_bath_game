@@ -35,7 +35,6 @@ module.exports = {
                 return this.getR;
             default:
                 throw new Error("Illegal Parameter id : " + id)
-                process.exit(1);
         }
     },
     applyToL (f) {
@@ -63,7 +62,6 @@ module.exports = {
                 return this.applyToR(this.getR);
             default:
                 throw new Error("Illegal Parameter id : " + id)
-                process.exit(1);
         }
     },
     unUsableStrategy (pFrom, pTo, strategyId) {
@@ -94,10 +92,9 @@ module.exports = {
     },
     doStrategyAutomatic(pFrom, pTo, nextStrategyId) {
         // 攻め手のオート実行
-        // 利用不可の攻め手の場合、任意の攻め手を選択する
+        // パラメータの攻め手Idxを保持
         let paramStrategyIdx = _strategyIds.lastIndexOf(nextStrategyId);
         // 攻め手が決まるまでループ
-        // 攻め手の決定
         // 係数
         let idx = 0;
         while(this.unUsableStrategy(pFrom, pTo, nextStrategyId)) {

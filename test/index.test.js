@@ -19,6 +19,7 @@ function entryPointScenario() {
         }
     }
 
+    // TODO over scenario lengthのシナリオのみ、再度パターン実行して検証できるようにする。
     // シナリオ実行
     let results = scenarios.reduce((acc, scenario, idx) => {
         let pA = rmg.createPlayer("a");
@@ -64,8 +65,8 @@ function entryPointScenario() {
     }, []);
 
 
-    results.filter((result) => result.winner == "a").forEach(outResult);
-    results.filter((result) => result.winner == "b").forEach(outResult);
+//    results.filter((result) => result.winner == "a").forEach(outResult);
+//    results.filter((result) => result.winner == "b").forEach(outResult);
     results.filter((result) => !result.winner).forEach(outResult);
 };
 
@@ -127,5 +128,5 @@ function outLog(title, p1, p2) {
 };
 
 // 実行
-// entryPointScenario();
-entryPointAutomatic();
+entryPointScenario();
+// entryPointAutomatic();
