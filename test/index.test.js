@@ -1,8 +1,5 @@
 'use strict';
 
-// TODO コードの整理整頓
-// TODO テストデータとの突合せも実施
-
 const rmg = require('../app');
 // シナリオ実行
 function entryPointScenario() {
