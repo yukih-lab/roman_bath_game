@@ -1,14 +1,14 @@
 'use strict';
 
-const rmg = require('../app');
+const rbg = require('../app/core');
 // シナリオ実行
 function entryPointScenario() {
     let scenarios = [];
-    for (let s1 of rmg.strategyIds()) {
-        for (let s2 of rmg.strategyIds()) {
-            for (let s3 of rmg.strategyIds()) {
-                for (let s4 of rmg.strategyIds()) {
-                    for (let s5 of rmg.strategyIds()) {
+    for (let s1 of rbg.strategyIds()) {
+        for (let s2 of rbg.strategyIds()) {
+            for (let s3 of rbg.strategyIds()) {
+                for (let s4 of rbg.strategyIds()) {
+                    for (let s5 of rbg.strategyIds()) {
                         scenarios.push([s1, s2, s3, s4, s5])
                     }
                 }
@@ -19,18 +19,18 @@ function entryPointScenario() {
     // TODO over scenario lengthのシナリオのみ、再度パターン実行して検証できるようにする。
     // シナリオ実行
     let results = scenarios.reduce((acc, scenario, idx) => {
-        let pA = rmg.createPlayer("a");
-        let pB = rmg.createPlayer("b");
+        let pA = rbg.createPlayer("a");
+        let pB = rbg.createPlayer("b");
 
         let turn = 1;
         let result = {idx : idx, scenario : scenario, winner : null, message : null, score : []};
 
         // 勝負がつくまでループ
-        while(!rmg.isNoSide(pA, pB)) {
+        while(!rbg.isNoSide(pA, pB)) {
             // 先攻
             {
                 try {
-                    rmg.doStrategy(pA, pB, scenario[turn * 2 - 2]);
+                    rbg.doStrategy(pA, pB, scenario[turn * 2 - 2]);
                     result.score.push(getTurnHalf(turn, pA.name, pA, pB));
                 } catch (e) {
                     result.message = e.message;
@@ -39,9 +39,9 @@ function entryPointScenario() {
             }
 
             // 後攻
-            if (!rmg.isLoss(pB)) {
+            if (!rbg.isLoss(pB)) {
                 try {
-                    rmg.doStrategy(pB, pA, scenario[turn * 2 - 1]);
+                    rbg.doStrategy(pB, pA, scenario[turn * 2 - 1]);
                     result.score.push(getTurnHalf(turn, pB.name, pA, pB));
                 } catch (e) {
                     result.message = e.message;
@@ -52,9 +52,9 @@ function entryPointScenario() {
             turn++;
         }
 
-        if (rmg.isLoss(pB)) {
+        if (rbg.isLoss(pB)) {
             result.winner = pA.name;
-        } else if (rmg.isLoss(pA)) {
+        } else if (rbg.isLoss(pA)) {
             result.winner = pB.name;
         }
         acc.push(result);
@@ -81,33 +81,33 @@ function outResult(result) {
 
 // オートマティック版
 function entryPointAutomatic() {
-    let pA = rmg.createPlayer("a");
-    let pB = rmg.createPlayer("b");
+    let pA = rbg.createPlayer("a");
+    let pB = rbg.createPlayer("b");
 
-    let strategyIds = rmg.strategyIds();
+    let strategyIds = rbg.strategyIds();
 
     let turn = 1;
 
     // 勝負つくまでループ
-    while(!rmg.isNoSide(pA, pB)) {
+    while(!rbg.isNoSide(pA, pB)) {
         // 先攻
         {
-            rmg.doStrategyAutomatic(pA, pB, strategyIds[turn % 4]);
+            rbg.doStrategyAutomatic(pA, pB, strategyIds[turn % 4]);
             outLog("after turn A", pA, pB);
         }
 
         // 後攻
-        if (!rmg.isLoss(pB)) {
-            rmg.doStrategyAutomatic(pB, pA, strategyIds[turn % 4]);
+        if (!rbg.isLoss(pB)) {
+            rbg.doStrategyAutomatic(pB, pA, strategyIds[turn % 4]);
             outLog("after turn B", pA, pB);
         }
         // ターン加算
         turn++;
     }
 
-    if (rmg.isLoss(pB)) {
+    if (rbg.isLoss(pB)) {
         console.log(pA.name + " win!");
-    } else if (rmg.isLoss(pA)) {
+    } else if (rbg.isLoss(pA)) {
         console.log(pB.name + " win!");
     } else {
         console.log("draw");
@@ -126,4 +126,4 @@ function outLog(title, p1, p2) {
 
 // 実行
 entryPointScenario();
-// entryPointAutomatic();
+entryPointAutomatic();

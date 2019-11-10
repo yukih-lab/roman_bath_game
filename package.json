@@ -1,17 +1,20 @@
 {
   "name": "roman_bath_game",
   "version": "1.0.0",
-  "private" : true,
+  "private": true,
   "description": "roman bath game project.",
-  "main": "app/index.js",
+  "main": "app/core.js",
   "repository": {
     "type": "git",
-    "url" : "https://github.com/yukih-lab/roman_bath_game"
+    "url": "https://github.com/yukih-lab/roman_bath_game"
   },
   "scripts": {
-    "test": "echo \" do test \" && node ./test/index.test.js "
+    "test": "echo \\\\\\\" do test \\\\\\\" && node test/core.test.js "
   },
-  "dependencies": {},
+  "dependencies": {
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
+  },
   "keywords": [],
   "author": "yukih",
   "license": "ISC"
