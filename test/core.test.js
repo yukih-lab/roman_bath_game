@@ -1,6 +1,6 @@
 'use strict';
 
-const rbg = require('../app/core');
+const rbg = require('../app/src/core');
 // シナリオ実行
 function entryPointScenario() {
     let scenarios = [];
