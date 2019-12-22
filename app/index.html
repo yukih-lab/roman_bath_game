@@ -4,8 +4,172 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style type="text/css">
+    html, body {
+        height: 100%;
+    }
+    html {
+        display: table;
+        margin : auto;
+    }
+    body {
+        diplay : table-cell;
+        vertical-align: middle;
+    }
+    .contents {
+        display: flex;
+        flex-direction: column;
+    }
+    .contents .image-view {
+        margin : auto;
+    }
+    .contents .stage {
+        display: flex;
+        margin : auto;
+    }
+    .stage .player {
+        display: flex;
+    }
+    .stage .player.user {
+        flex-direction: column-reverse;
+    }
+    .stage .player.opponent {
+        flex-direction: column;
+    }
+    .player .hand {
+        display: flex;
+    }
+    .player.user .hand {
+        flex-direction: row-reverse;
+    }
+    .player.user .hand .history {
+        flex-direction: row-reverse;
+    }
+    .hand .current.score {
+        background-color: red;
+    }
+    .hand .history {
+        width : 200px;
+        display: flex;
+    }
+    .history .score:nth-of-type(1) { /** width は デフォルトのscore width に依存 **/ }
+    .history .score:nth-of-type(2) {
+        width : 30px;
+    }
+    .history .score:nth-of-type(3) {
+        width : 15px;
+    }
+    .history .score:nth-child(n + 4):nth-child(-n + 7)  {
+        width : 5px;
+    }
+    .history .score:nth-child(n + 8)  {
+        /** display : none; も検討 **/
+        width : 3px;
+    }
+    .history .score {
+        background-color:goldenrod;
+        margin : 3px;
+    }
+    .score {
+        width : 50px;
+        height : 50px;
+        margin : 3px;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">
+    window.addEventListener("DOMContentLoaded", function() {
+        let crrScores = Array.from(document.getElementsByClassName("current score"));
+        let nonPassive = {passive : false};
+        crrScores.forEach(function(elm) {
+            // ondragstart
+            elm.addEventListener("dragstart", function(event) {
+                    event.dataTransfer.setData("text/plain", event.target.innerText);
+                    event.dataTransfer.dropEffect="copy";
+                });
+
+            // ondragend
+            elm.addEventListener("dragend", function(event) {
+                // drag event　の決定、キャンセルを問わず発火する
+            });
+
+            // ondragover
+            elm.addEventListener("dragover", function(event) {
+                event.preventDefault();
+            }, nonPassive);
+
+            // ondrop
+            elm.addEventListener("drop", function(event) {
+                //        event.preventDefault(); TODO 要否判断
+                let cData = event.dataTransfer.getData("text/plain");
+                // TODO 加算イベントと紐づけ
+                event.target.innerText = event.target.innerText + cData;
+            }, nonPassive);
+        });
+    });
+
+</script>
 <body>
-    <div id="root"></div>
-    <script src="./bundle.js"></script>
+<div id="mock" class="contents">
+    <div class="image-view">
+        <img src="https://placehold.jp/430x200.png" title="dummy"/>
+    </div>
+    <div class="stage">
+        <div class="player user">
+            <div class="hand right">
+                <div class="current score" draggable="true" >
+                    r
+                </div>
+                <div class="history">
+                    <div class="score">r1</div>
+                    <div class="score">r2</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
+                </div>
+            </div>
+            <div class="hand left">
+                <div class="current score" draggable="true" >
+                    l
+                </div>
+                <div class="history">
+                    <div class="score">l1</div>
+                    <div class="score">l2</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
+                </div>
+            </div>
+        </div>
+        <div class="player opponent">
+            <div class="hand right">
+                <div class="current score" draggable="true" >
+                    r
+                </div>
+                <div class="history">
+                    <div class="score">r1</div>
+                    <div class="score">r2</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
+                </div>
+            </div>
+            <div class="hand left">
+                <div class="current score" draggable="true" >
+                    l
+                </div>
+                <div class="history">
+                    <div class="score">l1</div>
+                    <div class="score">l2</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="root"></div>
+<script src="./bundle.js"></script>
 </body>
 </html>
