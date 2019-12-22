@@ -29,6 +29,11 @@
     }
     .stage .player {
         display: flex;
+    }
+    .stage .player.user {
+        flex-direction: column-reverse;
+    }
+    .stage .player.opponent {
         flex-direction: column;
     }
     .player .hand {
@@ -42,17 +47,14 @@
     }
     .hand .current.score {
         background-color: red;
-        width:30px;
     }
     .hand .history {
         width : 200px;
         display: flex;
     }
-    .history .score:nth-of-type(1) {
-        width : 30px;
-    }
+    .history .score:nth-of-type(1) { /** width は デフォルトのscore width に依存 **/ }
     .history .score:nth-of-type(2) {
-        width : 20px;
+        width : 30px;
     }
     .history .score:nth-of-type(3) {
         width : 15px;
@@ -61,34 +63,51 @@
         width : 5px;
     }
     .history .score:nth-child(n + 8)  {
+        /** display : none; も検討 **/
         width : 3px;
     }
     .history .score {
         background-color:goldenrod;
-        width : 5px;
         margin : 3px;
     }
     .score {
+        width : 50px;
+        height : 50px;
         margin : 3px;
         text-align: center;
     }
 </style>
 <script type="text/javascript">
-    // 画面操作スクリプト
-    function ondragstart_handler(event) {
-        console.log("catch event ondragstart_handler", event);
-    }
-    function ondragend_handler(event) {
-        console.log("catch event ondragend_handler", event);
-    }
+    window.addEventListener("DOMContentLoaded", function() {
+        let crrScores = Array.from(document.getElementsByClassName("current score"));
+        let nonPassive = {passive : false};
+        crrScores.forEach(function(elm) {
+            // ondragstart
+            elm.addEventListener("dragstart", function(event) {
+                    event.dataTransfer.setData("text/plain", event.target.innerText);
+                    event.dataTransfer.dropEffect="copy";
+                });
 
-    function ondragover_handler(event) {
-        console.log("catch event ondragover_handler", event);
-    }
+            // ondragend
+            elm.addEventListener("dragend", function(event) {
+                // drag event　の決定、キャンセルを問わず発火する
+            });
 
-    function ondrop_handler(event) {
-        console.log("catch event ondrop_handler", event);
-    }
+            // ondragover
+            elm.addEventListener("dragover", function(event) {
+                event.preventDefault();
+            }, nonPassive);
+
+            // ondrop
+            elm.addEventListener("drop", function(event) {
+                //        event.preventDefault(); TODO 要否判断
+                let cData = event.dataTransfer.getData("text/plain");
+                // TODO 加算イベントと紐づけ
+                event.target.innerText = event.target.innerText + cData;
+            }, nonPassive);
+        });
+    });
+
 </script>
 <body>
 <div id="mock" class="contents">
@@ -98,44 +117,52 @@
     <div class="stage">
         <div class="player user">
             <div class="hand right">
-                <div class="current score" draggable="true" ondragstart="ondragstart_handler(event)" ondragend="ondragend_handler(event)" ondragover="ondragover_handler(event)" ondrop="ondrop_handler(event)" >
+                <div class="current score" draggable="true" >
                     r
                 </div>
                 <div class="history">
                     <div class="score">r1</div>
                     <div class="score">r2</div>
                     <div class="score">r3</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
                 </div>
             </div>
             <div class="hand left">
-                <div class="current score" draggable="true" ondragstart="ondragstart_handler(event)" ondragend="ondragend_handler(event)" ondragover="ondragover_handler(event)" ondrop="ondrop_handler(event)" >
+                <div class="current score" draggable="true" >
                     l
                 </div>
                 <div class="history">
                     <div class="score">l1</div>
                     <div class="score">l2</div>
                     <div class="score">l3</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
                 </div>
             </div>
         </div>
         <div class="player opponent">
             <div class="hand right">
-                <div class="current score" draggable="true" ondragstart="ondragstart_handler(event)" ondragend="ondragend_handler(event)" ondragover="ondragover_handler(event)" ondrop="ondrop_handler(event)" >
+                <div class="current score" draggable="true" >
                     r
                 </div>
                 <div class="history">
                     <div class="score">r1</div>
                     <div class="score">r2</div>
                     <div class="score">r3</div>
+                    <div class="score">r3</div>
+                    <div class="score">r3</div>
                 </div>
             </div>
             <div class="hand left">
-                <div class="current score" draggable="true" ondragstart="ondragstart_handler(event)" ondragend="ondragend_handler(event)" ondragover="ondragover_handler(event)" ondrop="ondrop_handler(event)" >
+                <div class="current score" draggable="true" >
                     l
                 </div>
                 <div class="history">
                     <div class="score">l1</div>
                     <div class="score">l2</div>
+                    <div class="score">l3</div>
+                    <div class="score">l3</div>
                     <div class="score">l3</div>
                 </div>
             </div>
