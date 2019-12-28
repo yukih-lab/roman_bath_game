@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Stage from "./component/Stage.jsx";
+import App from "./App.jsx";
 const title = "roman bath game";
 window.addEventListener("load", () => {
-    ReactDOM.render(<Stage />, document.getElementById('root'));
+    ReactDOM.render(<App />, document.getElementById('root'));
 }, false);

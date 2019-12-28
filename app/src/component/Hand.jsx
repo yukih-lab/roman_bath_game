@@ -5,7 +5,7 @@ import History from "./History.jsx";
 const Hand = (props) => {
     return (
         <div className={"hand " + props.type}>
-            <Score type="current" score="1"/>
+            <Score type="current" score="1" draggable={true}/>
             <History />
         </div>
 
