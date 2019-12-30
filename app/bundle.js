@@ -23,7 +23,7 @@ var App = function App(props) {
 var _default = App;
 exports["default"] = _default;
 
-},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":18}],2:[function(require,module,exports){
+},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":19}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39,20 +39,72 @@ var _History = _interopRequireDefault(require("./History.jsx"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Hand = function Hand(props) {
-  return _react["default"].createElement("div", {
-    className: "hand " + props.type
-  }, _react["default"].createElement(_Score["default"], {
-    type: "current",
-    score: "1",
-    draggable: true
-  }), _react["default"].createElement(_History["default"], null));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Hand =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Hand, _React$Component);
+
+  function Hand(props) {
+    var _this;
+
+    _classCallCheck(this, Hand);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Hand).call(this, props));
+    _this.onDraggableChange = _this.onDraggableChange.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Hand, [{
+    key: "onDraggableChange",
+    value: function onDraggableChange(val) {
+      this.props.onDraggableChange(this.props.type, val);
+    } // current Score set  current score value.
+    // History sets old score values.
+    // score and history are caputure that players properties.
+    // draggable
+    // current score
+    // history append child
+
+  }, {
+    key: "render",
+    value: function render() {
+      return _react["default"].createElement("div", {
+        className: "hand " + this.props.type
+      }, _react["default"].createElement(_Score["default"], {
+        type: "current",
+        score: this.props.score,
+        draggable: true,
+        onDraggableChange: this.onDraggableChange
+      }), _react["default"].createElement(_History["default"], null));
+    }
+  }]);
+
+  return Hand;
+}(_react["default"].Component);
+
+;
 var _default = Hand;
 exports["default"] = _default;
 
-},{"./History.jsx":3,"./Score.jsx":5,"react":18}],3:[function(require,module,exports){
+},{"./History.jsx":3,"./Score.jsx":5,"react":19}],3:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -102,17 +154,15 @@ var History = function History(props) {
   }, {
     type: null,
     score: 1
-  }, {
-    type: null,
-    score: 1
   }]),
       _useState2 = _slicedToArray(_useState, 1),
       scores = _useState2[0];
 
   return _react["default"].createElement("div", {
     className: 'history'
-  }, scores.map(function (s) {
+  }, scores.map(function (s, idx) {
     return _react["default"].createElement(_Score["default"], {
+      key: idx,
       score: s.score,
       draggable: false
     });
@@ -122,7 +172,7 @@ var History = function History(props) {
 var _default = History;
 exports["default"] = _default;
 
-},{"./Score.jsx":5,"react":18}],4:[function(require,module,exports){
+},{"./Score.jsx":5,"react":19}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -134,22 +184,79 @@ var _react = _interopRequireDefault(require("react"));
 
 var _Hand = _interopRequireDefault(require("./Hand.jsx"));
 
+var _core = _interopRequireDefault(require("./../core.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Player = function Player(props) {
-  return _react["default"].createElement("div", {
-    className: 'player ' + props.type
-  }, _react["default"].createElement(_Hand["default"], {
-    type: "right"
-  }), _react["default"].createElement(_Hand["default"], {
-    type: "left"
-  }));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Player =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Player, _React$Component);
+
+  function Player(props) {
+    var _this;
+
+    _classCallCheck(this, Player);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Player).call(this, props));
+    _this.state = {
+      left: 1,
+      right: 1
+    };
+    _this.onDraggableChange = _this.onDraggableChange.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Player, [{
+    key: "onDraggableChange",
+    value: function onDraggableChange(type, score) {
+      this.setState(_defineProperty({}, type, score));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react["default"].createElement("div", {
+        className: 'player ' + this.props.type
+      }, _react["default"].createElement(_Hand["default"], {
+        type: "right",
+        score: this.state.right,
+        onDraggableChange: this.onDraggableChange
+      }), _react["default"].createElement(_Hand["default"], {
+        type: "left",
+        score: this.state.left,
+        onDraggableChange: this.onDraggableChange
+      }));
+    }
+  }]);
+
+  return Player;
+}(_react["default"].Component);
+
+;
 var _default = Player;
 exports["default"] = _default;
 
-},{"./Hand.jsx":2,"react":18}],5:[function(require,module,exports){
+},{"./../core.js":8,"./Hand.jsx":2,"react":19}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -161,17 +268,87 @@ var _react = _interopRequireDefault(require("react"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Score = function Score(props) {
-  return _react["default"].createElement("div", {
-    className: "score " + props.type,
-    draggable: props.draggable
-  }, props.score);
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Score =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Score, _React$Component);
+
+  function Score(props) {
+    var _this;
+
+    _classCallCheck(this, Score);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Score).call(this, props));
+    _this.onDragStart = _this.onDragStart.bind(_assertThisInitialized(_this));
+    _this.onDragStop = _this.onDragStop.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Score, [{
+    key: "onDragStart",
+    value: function onDragStart(e) {
+      e.dataTransfer.setData("text/plain", e.target.innerText);
+      e.dataTransfer.dropEffect = "copy";
+      console.log("onDragStart", e.target.innerText);
+    }
+  }, {
+    key: "onDragOver",
+    value: function onDragOver(e) {
+      e.preventDefault();
+    }
+  }, {
+    key: "onDragStop",
+    value: function onDragStop(e) {
+      // TODO 加算イベントと紐づけ
+      var cData = e.dataTransfer.getData("text/plain");
+      var val = parseInt(e.target.innerText) + parseInt(cData);
+      this.props.onDraggableChange(val);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.props.type == 'current') {
+        return _react["default"].createElement("div", {
+          className: "score " + this.props.type,
+          draggable: this.props.draggable,
+          onDragStart: this.onDragStart,
+          onDragOver: this.onDragOver,
+          onDrop: this.onDragStop
+        }, this.props.score);
+      } else {
+        return _react["default"].createElement("div", {
+          className: "score"
+        }, this.props.score);
+      }
+    }
+  }]);
+
+  return Score;
+}(_react["default"].Component);
+
+;
 var _default = Score;
 exports["default"] = _default;
 
-},{"react":18}],6:[function(require,module,exports){
+},{"react":19}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -195,7 +372,7 @@ var Screen = function Screen(props) {
 var _default = Screen;
 exports["default"] = _default;
 
-},{"react":18}],7:[function(require,module,exports){
+},{"react":19}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -222,7 +399,142 @@ var Stage = function Stage(props) {
 var _default = Stage;
 exports["default"] = _default;
 
-},{"./Player.jsx":4,"react":18}],8:[function(require,module,exports){
+},{"./Player.jsx":4,"react":19}],8:[function(require,module,exports){
+'use strict';
+
+var _player = {
+  l: 1,
+  r: 1
+};
+var l = "l",
+    r = "r",
+    ll = "ll",
+    lr = "lr",
+    rl = "rl",
+    rr = "rr";
+var _strategyIds = [ll, lr, rl, rr];
+module.exports = {
+  strategyIds: function strategyIds() {
+    // TODO コピーのキャッシュを持ちたい
+    return Array.from(_strategyIds);
+  },
+  createPlayer: function createPlayer(name) {
+    return Object.assign({
+      name: name
+    }, _player);
+  },
+  isLoss: function isLoss(p) {
+    return this.isBreak(this.getL)(p) && this.isBreak(this.getR)(p);
+  },
+  isNoSide: function isNoSide(p1, p2) {
+    return this.isLoss(p1) || this.isLoss(p2);
+  },
+  getL: function getL(p) {
+    return p.l;
+  },
+  getR: function getR(p) {
+    return p.r;
+  },
+  getLRById: function getLRById(id) {
+    switch (id) {
+      case l:
+        return this.getL;
+
+      case r:
+        return this.getR;
+
+      default:
+        throw new Error("Illegal Parameter id : " + id);
+    }
+  },
+  applyToL: function applyToL(f) {
+    // f関数の戻り値をpToの左手に適用
+    return function (pFrom, pTo) {
+      pTo.l += f(pFrom);
+    };
+  },
+  applyToR: function applyToR(f) {
+    // f関数の戻り値をpToの右手に適用
+    return function (pFrom, pTo) {
+      pTo.r += f(pFrom);
+    };
+  },
+  getStrategy: function getStrategy(id) {
+    // 攻撃手関数を取得
+    switch (id) {
+      case ll:
+        return this.applyToL(this.getL);
+
+      case lr:
+        return this.applyToR(this.getL);
+
+      case rl:
+        return this.applyToL(this.getR);
+
+      case rr:
+        return this.applyToR(this.getR);
+
+      default:
+        throw new Error("Illegal Parameter id : " + id);
+    }
+  },
+  unUsableStrategy: function unUsableStrategy(pFrom, pTo, strategyId) {
+    // 攻め手の利用不可のケース判定
+    //   自身の攻め手が使用不可
+    // 　または
+    //   攻撃対象の相手方の手が使用不可
+    var from = strategyId.charAt(0);
+    var to = strategyId.charAt(1);
+    return this.isBreak(this.getLRById(from))(pFrom) || this.isBreak(this.getLRById(to))(pTo);
+  },
+  isBreak: function isBreak(f) {
+    // 対象手がブレイクされているか否かを判定
+    return function (p) {
+      return f(p) % 5 == 0;
+    };
+  },
+  doStrategy: function doStrategy(pFrom, pTo, nextStrategyId) {
+    // 攻め手実行
+    if (nextStrategyId == null) {
+      throw new Error("over scenario length.");
+    }
+
+    if (this.unUsableStrategy(pFrom, pTo, nextStrategyId)) {
+      throw new Error("illegal pattern :" + nextStrategyId + ".");
+    }
+
+    this.getStrategy(nextStrategyId)(pFrom, pTo);
+  },
+  doStrategyAutomatic: function doStrategyAutomatic(pFrom, pTo, nextStrategyId) {
+    // 攻め手のオート実行
+    // パラメータの攻め手Idxを保持
+    var paramStrategyIdx = _strategyIds.lastIndexOf(nextStrategyId); // 攻め手が決まるまでループ
+    // 係数
+
+
+    var idx = 0;
+
+    while (this.unUsableStrategy(pFrom, pTo, nextStrategyId)) {
+      // 攻め手が見つからない場合、例外を発生させる
+      if (idx == _strategyIds.length) {
+        throw new Error("strategy not found.");
+      } //  攻め手利用不可の場合、攻め手の変更
+
+
+      if (idx == paramStrategyIdx) {
+        idx++;
+      }
+
+      nextStrategyId = _strategyIds[idx];
+      idx++;
+    } // 攻め手を実行
+
+
+    this.getStrategy(nextStrategyId)(pFrom, pTo);
+  }
+};
+
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -238,7 +550,7 @@ window.addEventListener("load", function () {
   _reactDom["default"].render(_react["default"].createElement(_App["default"], null), document.getElementById('root'));
 }, false);
 
-},{"./App.jsx":1,"react":18,"react-dom":15}],9:[function(require,module,exports){
+},{"./App.jsx":1,"react":19,"react-dom":16}],10:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -330,7 +642,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -516,7 +828,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -622,7 +934,7 @@ checkPropTypes.resetWarningCache = function() {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":12,"_process":10}],12:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":13,"_process":11}],13:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -636,7 +948,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react-dom.development.js
@@ -28367,7 +28679,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11,"react":18,"scheduler":23,"scheduler/tracing":24}],14:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12,"react":19,"scheduler":24,"scheduler/tracing":25}],15:[function(require,module,exports){
 /** @license React v16.11.0
  * react-dom.production.min.js
  *
@@ -28659,7 +28971,7 @@ xe,ye,Ca.injectEventPluginsByName,fa,Sc,function(a){ya(a,Rc)},cb,db,Pd,Ba,Sj,{cu
 (function(a){var b=a.findFiberByHostInstance;return ok(n({},a,{overrideHookState:null,overrideProps:null,setSuspenseHandler:null,scheduleUpdate:null,currentDispatcherRef:Ea.ReactCurrentDispatcher,findHostInstanceByFiber:function(a){a=ic(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null},findHostInstancesForRefresh:null,scheduleRefresh:null,scheduleRoot:null,setRefreshHandler:null,getCurrentFiber:null}))})({findFiberByHostInstance:Fc,bundleType:0,version:"16.11.0",
 rendererPackageName:"react-dom"});var Dk={default:Ck},Ek=Dk&&Ck||Dk;module.exports=Ek.default||Ek;
 
-},{"object-assign":9,"react":18,"scheduler":23}],15:[function(require,module,exports){
+},{"object-assign":10,"react":19,"scheduler":24}],16:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -28701,7 +29013,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":13,"./cjs/react-dom.production.min.js":14,"_process":10}],16:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":14,"./cjs/react-dom.production.min.js":15,"_process":11}],17:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react.development.js
@@ -31023,7 +31335,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11}],17:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12}],18:[function(require,module,exports){
 /** @license React v16.11.0
  * react.production.min.js
  *
@@ -31050,7 +31362,7 @@ b,c){return W().useImperativeHandle(a,b,c)},useDebugValue:function(){},useLayout
 if(null!=b){void 0!==b.ref&&(g=b.ref,l=J.current);void 0!==b.key&&(d=""+b.key);if(a.type&&a.type.defaultProps)var f=a.type.defaultProps;for(k in b)K.call(b,k)&&!L.hasOwnProperty(k)&&(e[k]=void 0===b[k]&&void 0!==f?f[k]:b[k])}var k=arguments.length-2;if(1===k)e.children=c;else if(1<k){f=Array(k);for(var m=0;m<k;m++)f[m]=arguments[m+2];e.children=f}return{$$typeof:p,type:a.type,key:d,ref:g,props:e,_owner:l}},createFactory:function(a){var b=M.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.11.0",
 __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentDispatcher:I,ReactCurrentBatchConfig:{suspense:null},ReactCurrentOwner:J,IsSomeRendererActing:{current:!1},assign:h}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":9}],18:[function(require,module,exports){
+},{"object-assign":10}],19:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -31061,7 +31373,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":16,"./cjs/react.production.min.js":17,"_process":10}],19:[function(require,module,exports){
+},{"./cjs/react.development.js":17,"./cjs/react.production.min.js":18,"_process":11}],20:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler-tracing.development.js
@@ -31486,7 +31798,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],20:[function(require,module,exports){
+},{"_process":11}],21:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler-tracing.production.min.js
  *
@@ -31498,7 +31810,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler.development.js
@@ -32527,7 +32839,7 @@ exports.unstable_Profiling = unstable_Profiling;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],22:[function(require,module,exports){
+},{"_process":11}],23:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler.production.min.js
  *
@@ -32551,7 +32863,7 @@ exports.unstable_scheduleCallback=function(a,b,c){var d=exports.unstable_now();i
 exports.unstable_wrapCallback=function(a){var b=S;return function(){var c=S;S=b;try{return a.apply(this,arguments)}finally{S=c}}};exports.unstable_getCurrentPriorityLevel=function(){return S};exports.unstable_shouldYield=function(){var a=exports.unstable_now();W(a);var b=M(O);return b!==R&&null!==R&&null!==b&&null!==b.callback&&b.startTime<=a&&b.expirationTime<R.expirationTime||k()};exports.unstable_requestPaint=aa;exports.unstable_continueExecution=function(){U||T||(U=!0,f(Y))};
 exports.unstable_pauseExecution=function(){};exports.unstable_getFirstCallbackNode=function(){return M(O)};exports.unstable_Profiling=null;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32562,7 +32874,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":21,"./cjs/scheduler.production.min.js":22,"_process":10}],24:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":22,"./cjs/scheduler.production.min.js":23,"_process":11}],25:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32573,4 +32885,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":19,"./cjs/scheduler-tracing.production.min.js":20,"_process":10}]},{},[8]);
+},{"./cjs/scheduler-tracing.development.js":20,"./cjs/scheduler-tracing.production.min.js":21,"_process":11}]},{},[9]);

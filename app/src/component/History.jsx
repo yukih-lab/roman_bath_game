@@ -10,11 +10,10 @@ const History = (props) => {
         {type : null, score : 1},
         {type : null, score : 1},
         {type : null, score : 1},
-        {type : null, score : 1},
     ]);
     return (
         <div className={'history'}>
-            {scores.map(s => <Score score={s.score} draggable={false} />)}
+            {scores.map((s, idx) => <Score key={idx} score={s.score} draggable={false} />)}
         </div>
     );
 };
