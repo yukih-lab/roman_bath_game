@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Score from "./Score.jsx";
 
-const History = (props) => {
-    const [scores] = useState([
-        {type : null, score : 1},
-        {type : null, score : 1},
-        {type : null, score : 1},
-        {type : null, score : 1},
-        {type : null, score : 1},
-        {type : null, score : 1},
-        {type : null, score : 1},
-    ]);
-    return (
-        <div className={'history'}>
-            {scores.map((s, idx) => <Score key={idx} score={s.score} draggable={false} />)}
-        </div>
-    );
+class History extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div className='history'>
+                {
+                    this.props.scores.map(
+                        (s, idx) => <Score key={idx} score={s.score} draggable={false} />
+                        )
+                }
+            </div>
+        );
+    }
 };
 export default History;

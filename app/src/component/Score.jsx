@@ -12,6 +12,7 @@ class Score extends React.Component {
         console.log("onDragStart", e.target.innerText);
     }
     onDragOver (e) {
+        // TODO 要不要見極め
         e.preventDefault();
     }
     onDragStop (e) {
@@ -20,8 +21,8 @@ class Score extends React.Component {
         let val = parseInt(e.target.innerText) + parseInt(cData);
         this.props.onDraggableChange(val);
     }
-
     render() {
+        const mod5 = (v) => v % 5;
         if (this.props.type == 'current') {
             return (
                 <div className={"score " + this.props.type}
@@ -29,12 +30,12 @@ class Score extends React.Component {
                      onDragStart={this.onDragStart}
                      onDragOver={this.onDragOver}
                      onDrop={this.onDragStop}>
-                    {this.props.score}
+                    {mod5(this.props.score)}
                 </div>
             );
         } else {
             return (
-                <div className="score">{this.props.score}</div>
+                <div className="score">{mod5(this.props.score)}</div>
             );
         }
     }
