@@ -12,7 +12,6 @@ class Score extends React.Component {
         console.log("onDragStart", e.target.innerText);
     }
     onDragOver (e) {
-        // TODO 要不要見極め
         e.preventDefault();
     }
     onDragStop (e) {

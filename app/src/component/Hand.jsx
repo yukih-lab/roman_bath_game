@@ -5,28 +5,19 @@ import History from "./History.jsx";
 class Hand extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {score : 1, scores : []}
         this.onDraggableChange = this.onDraggableChange.bind(this);
-        this.appendHistory = this.appendHistory.bind(this);
     }
     onDraggableChange(val) {
-        this.appendHistory(this.state.score);
-        this.setState({score : val});
-    }
-    // TODO appendHistory 実装検討　historyは全体で履歴を刻むべき
-    appendHistory(val) {
-        let scores = [...this.state.scores];
-        scores.push({score: val});
-        this.setState({scores : scores});
+        this.props.onDraggableChange(this.props.type, val);
     }
     render() {
         return (
             <div className={"hand " + this.props.type}>
                 <Score type="current"
-                       score={this.state.score}
+                       score={this.props.score}
                        draggable={true}
                        onDraggableChange={this.onDraggableChange}/>
-                <History scores={this.state.scores}/>
+                <History scores={this.props.history}/>
             </div>
 
         );
