@@ -1,5 +1,6 @@
 import React from 'react';
 
+const mod5 = (v) => v % 5;
 class Score extends React.Component {
     constructor(props) {
         super(props);
@@ -15,17 +16,15 @@ class Score extends React.Component {
         e.preventDefault();
     }
     onDragStop (e) {
-        // TODO 加算イベントと紐づけ
         let cData = e.dataTransfer.getData("text/plain");
         let val = parseInt(e.target.innerText) + parseInt(cData);
         this.props.onDraggableChange(val);
     }
     render() {
-        const mod5 = (v) => v % 5;
-        if (this.props.type == 'current') {
+        if (this.props.type == "current") {
             return (
                 <div className={"score " + this.props.type}
-                     draggable={this.props.draggable}
+                     draggable={true}
                      onDragStart={this.onDragStart}
                      onDragOver={this.onDragOver}
                      onDrop={this.onDragStop}>
@@ -34,9 +33,12 @@ class Score extends React.Component {
             );
         } else {
             return (
-                <div className="score">{mod5(this.props.score)}</div>
+                <div className={"score " + this.props.type} >
+                    {mod5(this.props.score)}
+                </div>
             );
         }
+
     }
 };
 

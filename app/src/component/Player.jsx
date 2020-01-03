@@ -4,36 +4,24 @@ class Player extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            left : 1,  left_history : [],
-            right : 1,  right_history : []
+            left_isBreak : false,
+            right_isBreak : false,
+            history_length : 0
         }
         this.onDraggableChange = this.onDraggableChange.bind(this);
-        this.appendHistory = this.appendHistory.bind(this);
     }
-    onDraggableChange(type, val) {
-        this.appendHistory();
-        this.setState({[type] : val});
-    }
-    appendHistory() {
-        let f = (type) => {
-            let scores = [...this.state[type +"_history"]];
-            scores.unshift({score: this.state[type]});
-            this.setState({[type + "_history"] : scores});
-        };
-        f("left");
-        f("right");
+    onDraggableChange(historyLength) {
+        this.setState({ history_length : historyLength });
     }
     render() {
         return (
             <div className={'player ' + this.props.type}>
                 <Hand type="right"
-                      score={this.state.right}
-                      history={this.state.right_history}
-                      onDraggableChange={this.onDraggableChange}/>
+                      onDraggableChange={this.onDraggableChange}
+                      historyLength={this.state.history_length}/>
                 <Hand type="left"
-                      score={this.state.left}
-                      history={this.state.left_history}
-                      onDraggableChange={this.onDraggableChange}/>
+                      onDraggableChange={this.onDraggableChange}
+                      historyLength={this.state.history_length}/>
             </div>
         );
     }

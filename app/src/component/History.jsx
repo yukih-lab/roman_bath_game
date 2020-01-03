@@ -1,20 +1,19 @@
 import React from 'react';
 import Score from "./Score.jsx";
 
-class History extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return (
-            <div className='history'>
-                {
-                    this.props.scores.map(
-                        (s, idx) => <Score key={idx} score={s.score} draggable={false} />
-                        )
-                }
-            </div>
-        );
-    }
+const History = (props) => {
+    return (
+        <div className='history'>
+            {
+                props.scores.map(
+                    (s, idx) => <Score
+                        key={idx}
+                        type="historyItems"
+                        score={s.score}
+                        />
+                )
+            }
+        </div>
+    );
 };
 export default History;

@@ -45,8 +45,11 @@
     .player.user .hand .history {
         flex-direction: row-reverse;
     }
-    .hand .current.score {
+    .hand .score.current {
         background-color: red;
+    }
+    .hand .score.break {
+        background-color: gray;
     }
     .hand .history {
         width : 200px;
@@ -78,7 +81,7 @@
     }
 </style>
 <body>
-<div id="root"></div>
+<div id="root" class="contents"></div>
 <script src="./bundle.js"></script>
 </body>
 </html>
