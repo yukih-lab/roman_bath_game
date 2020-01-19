@@ -1,8 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -20,10 +18,64 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-var App = function App(props) {
-  return _react["default"].createElement(_react.Fragment, null, _react["default"].createElement(_Screen["default"], null), _react["default"].createElement(_Stage["default"], null));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var App =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(App, _React$Component);
+
+  function App(props) {
+    var _this;
+
+    _classCallCheck(this, App);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
+    _this.state = {
+      appStatus: 0
+    };
+    _this.setAppStatus = _this.setAppStatus.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(App, [{
+    key: "setAppStatus",
+    value: function setAppStatus(appStatus) {
+      this.setState({
+        appStatus: appStatus
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react["default"].createElement(_react.Fragment, null, _react["default"].createElement(_Screen["default"], {
+        appStatus: this.props.appStatus
+      }), _react["default"].createElement(_Stage["default"], {
+        setAppStatus: this.setAppStatus
+      }));
+    }
+  }]);
+
+  return App;
+}(_react["default"].Component);
+
+;
 var _default = App;
 exports["default"] = _default;
 
@@ -44,14 +96,6 @@ var _History = _interopRequireDefault(require("./History.jsx"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -80,41 +124,14 @@ function (_React$Component) {
     _classCallCheck(this, Hand);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Hand).call(this, props));
-    _this.state = {
-      score: 1,
-      history: [],
-      isBreak: false
-    };
-    _this.onDraggableChange = _this.onDraggableChange.bind(_assertThisInitialized(_this));
-    _this.appendHistory = _this.appendHistory.bind(_assertThisInitialized(_this));
+    _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Hand, [{
-    key: "onDraggableChange",
-    value: function onDraggableChange(val) {
-      if (!this.state.isBreak) {
-        this.appendHistory();
-        this.props.onDraggableChange(this.state.history.length);
-        this.setState({
-          score: val
-        });
-        this.setState({
-          isBreak: val % 5 == 0
-        });
-      }
-    }
-  }, {
-    key: "appendHistory",
-    value: function appendHistory() {
-      var scores = _toConsumableArray(this.state.history);
-
-      scores.unshift({
-        score: this.state.score
-      });
-      this.setState({
-        history: scores
-      });
+    key: "onChange",
+    value: function onChange(score) {
+      this.props.onChange(this.props.type, score);
     }
   }, {
     key: "render",
@@ -122,11 +139,11 @@ function (_React$Component) {
       return _react["default"].createElement("div", {
         className: "hand " + this.props.type
       }, _react["default"].createElement(_Score["default"], {
-        type: this.state.isBreak ? "break" : "current",
-        score: this.state.score,
-        onDraggableChange: this.onDraggableChange
+        type: this.props.score % 5 == 0 ? "break" : "current",
+        score: this.props.score,
+        onChange: this.onChange
       }), _react["default"].createElement(_History["default"], {
-        scores: this.state.history
+        scores: this.props.history
       }));
     }
   }]);
@@ -211,34 +228,65 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Player).call(this, props));
     _this.state = {
-      left_isBreak: false,
-      right_isBreak: false,
+      hands: [{
+        name: "left",
+        score: 1,
+        history: []
+      }, {
+        name: "right",
+        score: 1,
+        history: []
+      }],
       history_length: 0
     };
-    _this.onDraggableChange = _this.onDraggableChange.bind(_assertThisInitialized(_this));
+    _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     return _this;
-  }
+  } // todo
+  // onAttack() {
+  //
+  // }
+
 
   _createClass(Player, [{
-    key: "onDraggableChange",
-    value: function onDraggableChange(historyLength) {
-      this.setState({
-        history_length: historyLength
+    key: "onChange",
+    value: function onChange(type, score) {
+      var hands = this.state.hands.map(function (h) {
+        h.history.unshift({
+          score: h.score
+        });
+
+        if (type == h.name) {
+          h.score = score;
+        }
+
+        return h;
       });
+      console.log(type, score, hands);
+      this.setState({
+        hands: hands
+      }); // すべてのHandsが使用不可の場合、敗北と判定
+
+      var breakHands = hands.filter(function (h) {
+        return h.score % 5 == 0;
+      });
+      var isBreak = breakHands.length == this.state.hands.length;
+      this.props.onChangeTurn(this.props.name, isBreak);
     }
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return _react["default"].createElement("div", {
-        className: 'player ' + this.props.type
-      }, _react["default"].createElement(_Hand["default"], {
-        type: "right",
-        onDraggableChange: this.onDraggableChange,
-        historyLength: this.state.history_length
-      }), _react["default"].createElement(_Hand["default"], {
-        type: "left",
-        onDraggableChange: this.onDraggableChange,
-        historyLength: this.state.history_length
+        className: 'player ' + this.props.name
+      }, this.state.hands.map(function (h, idx) {
+        return _react["default"].createElement(_Hand["default"], {
+          key: idx,
+          type: h.name,
+          score: h.score,
+          history: h.history,
+          onChange: _this2.onChange
+        });
       }));
     }
   }]);
@@ -295,7 +343,8 @@ function (_React$Component) {
     _classCallCheck(this, Score);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Score).call(this, props));
-    _this.onDragStart = _this.onDragStart.bind(_assertThisInitialized(_this));
+    _this.onDragStart = _this.onDragStart.bind(_assertThisInitialized(_this)); // TODO bindは不要、thisコンテキストを必要としていない
+
     _this.onDragStop = _this.onDragStop.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -317,24 +366,18 @@ function (_React$Component) {
     value: function onDragStop(e) {
       var cData = e.dataTransfer.getData("text/plain");
       var val = parseInt(e.target.innerText) + parseInt(cData);
-      this.props.onDraggableChange(val);
+      this.props.onChange(val);
     }
   }, {
     key: "render",
     value: function render() {
-      if (this.props.type == "current") {
-        return _react["default"].createElement("div", {
-          className: "score " + this.props.type,
-          draggable: true,
-          onDragStart: this.onDragStart,
-          onDragOver: this.onDragOver,
-          onDrop: this.onDragStop
-        }, mod5(this.props.score));
-      } else {
-        return _react["default"].createElement("div", {
-          className: "score " + this.props.type
-        }, mod5(this.props.score));
-      }
+      return _react["default"].createElement("div", {
+        className: "score " + this.props.type,
+        draggable: this.props.type == "current",
+        onDragStart: this.onDragStart,
+        onDragOver: this.onDragOver,
+        onDrop: this.onDragStop
+      }, mod5(this.props.score));
     }
   }]);
 
@@ -357,15 +400,55 @@ var _react = _interopRequireDefault(require("react"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Screen = function Screen(props) {
-  return _react["default"].createElement("div", {
-    className: "screen"
-  }, _react["default"].createElement("img", {
-    src: "https://placehold.jp/430x200.png",
-    title: "dummy"
-  }));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Screen =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Screen, _React$Component);
+
+  function Screen(props) {
+    _classCallCheck(this, Screen);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Screen).call(this, props));
+  }
+
+  _createClass(Screen, [{
+    key: "render",
+    value: function render() {
+      // TODO appStatus に応じて表示画像の変更
+      // if (this.props.appStatus == '0') {
+      //
+      // }
+      return _react["default"].createElement("div", {
+        className: "screen"
+      }, _react["default"].createElement("img", {
+        src: "https://placehold.jp/430x200.png",
+        title: "dummy"
+      }));
+    }
+  }]);
+
+  return Screen;
+}(_react["default"].Component);
+
+;
 var _default = Screen;
 exports["default"] = _default;
 
@@ -383,16 +466,97 @@ var _Player = _interopRequireDefault(require("./Player.jsx"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Stage = function Stage(props) {
-  return _react["default"].createElement("div", {
-    className: "stage"
-  }, _react["default"].createElement(_Player["default"], {
-    type: "user"
-  }), _react["default"].createElement(_Player["default"], {
-    type: "opponent"
-  }));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Stage =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Stage, _React$Component);
+
+  function Stage(props) {
+    var _this;
+
+    _classCallCheck(this, Stage);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Stage).call(this, props));
+    _this.state = {
+      turnIdx: 0,
+      players: [{
+        name: "user",
+        isBreak: false
+      }, {
+        name: "opponent",
+        isBreak: false
+      }]
+    };
+    _this.onChangeTurn = _this.onChangeTurn.bind(_assertThisInitialized(_this));
+    _this.setPlayersStatus = _this.setPlayersStatus.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Stage, [{
+    key: "onChangeTurn",
+    value: function onChangeTurn(name, isBreak) {
+      var idx = this.state.turnIdx;
+      idx++;
+      this.setState({
+        turnIdx: idx
+      });
+
+      if (isBreak) {
+        this.setPlayersStatus(name, isBreak);
+      }
+    }
+  }, {
+    key: "setPlayersStatus",
+    value: function setPlayersStatus(name, isBreak) {
+      var players = this.state.players;
+      players.filter(function (p) {
+        return name == p.name;
+      }).map(function (p) {
+        return p.isBreak = isBreak;
+      });
+      this.setState({
+        players: players
+      }); //        throw Error("illegal Argument Exception");
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return _react["default"].createElement("div", {
+        className: "stage"
+      }, this.state.players.map(function (p, idx) {
+        return _react["default"].createElement(_Player["default"], {
+          key: idx,
+          name: p.name,
+          onChangeTurn: _this2.onChangeTurn
+        });
+      }));
+    }
+  }]);
+
+  return Stage;
+}(_react["default"].Component);
+
+;
 var _default = Stage;
 exports["default"] = _default;
 

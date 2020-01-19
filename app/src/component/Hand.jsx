@@ -5,34 +5,18 @@ import History from "./History.jsx";
 class Hand extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            score : 1,
-            history : [],
-            isBreak : false
-        };
-        this.onDraggableChange = this.onDraggableChange.bind(this);
-        this.appendHistory = this.appendHistory.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
-    onDraggableChange(val) {
-        if (!this.state.isBreak) {
-            this.appendHistory();
-            this.props.onDraggableChange(this.state.history.length);
-            this.setState({score : val});
-            this.setState({isBreak : val % 5 == 0});
-        }
-    }
-    appendHistory() {
-        let scores = [...this.state.history];
-        scores.unshift({score: this.state.score});
-        this.setState({history : scores});
+    onChange(score) {
+        this.props.onChange(this.props.type, score);
     }
     render() {
         return (
             <div className={"hand " + this.props.type}>
-                <Score type={this.state.isBreak ? "break" : "current"}
-                       score={this.state.score}
-                       onDraggableChange={this.onDraggableChange}/>
-                <History scores={this.state.history}/>
+                <Score type={ this.props.score % 5 == 0 ? "break" : "current"}
+                       score={this.props.score}
+                       onChange={this.onChange}/>
+                <History scores={this.props.history}/>
             </div>
         );
     }

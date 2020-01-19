@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "roman bath game project.",
-  "main": "app/src/core.js",
+  "main": "app/src/",
   "repository": {
     "type": "git",
     "url": "https://github.com/yukih-lab/roman_bath_game"

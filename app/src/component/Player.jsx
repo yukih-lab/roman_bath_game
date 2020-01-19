@@ -4,24 +4,48 @@ class Player extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            left_isBreak : false,
-            right_isBreak : false,
+            hands : [
+                { name : "left", score : 1, history : [] },
+                { name : "right", score : 1, history : [] }
+                ],
             history_length : 0
         }
-        this.onDraggableChange = this.onDraggableChange.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
-    onDraggableChange(historyLength) {
-        this.setState({ history_length : historyLength });
+    // todo
+    // onAttack() {
+    //
+    // }
+    onChange(type, score) {
+        let hands = this.state.hands
+            .map(h => {
+                h.history.unshift({score: h.score});
+                if (type == h.name) {
+                    h.score = score;
+                }
+                return h;
+            });
+        console.log(type, score, hands);
+        this.setState({hands : hands});
+        // すべてのHandsが使用不可の場合、敗北と判定
+        let breakHands = hands.filter(h => h.score % 5 == 0);
+        let isBreak = breakHands.length == this.state.hands.length;
+        this.props.onChangeTurn(this.props.name, isBreak);
     }
+
     render() {
         return (
-            <div className={'player ' + this.props.type}>
-                <Hand type="right"
-                      onDraggableChange={this.onDraggableChange}
-                      historyLength={this.state.history_length}/>
-                <Hand type="left"
-                      onDraggableChange={this.onDraggableChange}
-                      historyLength={this.state.history_length}/>
+            <div className={'player ' + this.props.name}>
+                {
+                    this.state.hands.map(
+                        (h, idx) => <Hand
+                            key={idx}
+                            type={h.name}
+                            score={h.score}
+                            history={h.history}
+                            onChange={this.onChange}
+                        />)
+                }
             </div>
         );
     }
