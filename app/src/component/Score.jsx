@@ -1,5 +1,5 @@
 import React from 'react';
-const mod5 = (v) => v % 5;
+const mod5 = (v) => v % 5; // utilにまとめる
 class Score extends React.Component {
     constructor(props) {
         super(props);
@@ -7,14 +7,15 @@ class Score extends React.Component {
         this.onDragStop = this.onDragStop.bind(this);
     }
     onDragStart (e) {
+        // console.log("onDragStart",e)
         e.dataTransfer.setData("text/plain", e.target.innerText);
         e.dataTransfer.dropEffect="copy";
-        console.log("onDragStart", e.target.innerText);
     }
     onDragOver (e) {
         e.preventDefault();
     }
     onDragStop (e) {
+        // console.log("onDragStop", e);
         let cData = e.dataTransfer.getData("text/plain");
         let val = parseInt(e.target.innerText) + parseInt(cData);
         this.props.onChange(val);
