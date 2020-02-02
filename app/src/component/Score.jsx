@@ -1,5 +1,8 @@
 import React from 'react';
-const mod5 = (v) => v % 5; // utilにまとめる
+const getHandType = (classSelector) => {
+    let regex = /(left|right)/g;
+    return classSelector.match(regex)[0];
+};
 class Score extends React.Component {
     constructor(props) {
         super(props);
@@ -7,27 +10,25 @@ class Score extends React.Component {
         this.onDragStop = this.onDragStop.bind(this);
     }
     onDragStart (e) {
-        // console.log("onDragStart",e)
-        e.dataTransfer.setData("text/plain", e.target.innerText);
+        let handType = getHandType(e.target.parentNode.className);
+        e.dataTransfer.setData("text/plain", handType);
         e.dataTransfer.dropEffect="copy";
     }
     onDragOver (e) {
         e.preventDefault();
     }
     onDragStop (e) {
-        // console.log("onDragStop", e);
-        let cData = e.dataTransfer.getData("text/plain");
-        let val = parseInt(e.target.innerText) + parseInt(cData);
-        this.props.onChange(val);
+        let handType = e.dataTransfer.getData("text/plain");
+        this.props.onChange(handType);
     }
     render() {
         return (
             <div className={"score " + this.props.type}
-                 draggable={(this.props.type == "current")}
+                 draggable={this.props.canAttack}
                  onDragStart={this.onDragStart}
                  onDragOver={this.onDragOver}
                  onDrop={this.onDragStop}>
-                {mod5(this.props.score)}
+                {this.props.score}
             </div>
         );
     }

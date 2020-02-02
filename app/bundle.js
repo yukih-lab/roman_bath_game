@@ -130,8 +130,8 @@ function (_React$Component) {
 
   _createClass(Hand, [{
     key: "onChange",
-    value: function onChange(score) {
-      this.props.onChange(this.props.type, score);
+    value: function onChange(fromHandType) {
+      this.props.onChange(this.props.type, fromHandType);
     }
   }, {
     key: "render",
@@ -141,6 +141,7 @@ function (_React$Component) {
       }, _react["default"].createElement(_Score["default"], {
         type: this.props.score % 5 == 0 ? "break" : "current",
         score: this.props.score,
+        canAttack: this.props.canAttack,
         onChange: this.onChange
       }), _react["default"].createElement(_History["default"], {
         scores: this.props.history
@@ -233,8 +234,8 @@ function (_React$Component) {
 
   _createClass(Player, [{
     key: "onChange",
-    value: function onChange(type, score) {
-      this.props.onChangeTurn(this.props.name, type, score);
+    value: function onChange(toHandType, fromHandType) {
+      this.props.onChangeTurn(this.props.name, toHandType, fromHandType);
     }
   }, {
     key: "render",
@@ -250,6 +251,7 @@ function (_React$Component) {
           type: h.type,
           score: h.score,
           history: h.history,
+          canAttack: _this2.props.canAttack,
           onChange: _this2.onChange
         });
       }));
@@ -293,10 +295,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var mod5 = function mod5(v) {
-  return v % 5;
-}; // utilにまとめる
-
+var getHandType = function getHandType(classSelector) {
+  var regex = /(left|right)/g;
+  return classSelector.match(regex)[0];
+};
 
 var Score =
 /*#__PURE__*/
@@ -318,8 +320,8 @@ function (_React$Component) {
   _createClass(Score, [{
     key: "onDragStart",
     value: function onDragStart(e) {
-      // console.log("onDragStart",e)
-      e.dataTransfer.setData("text/plain", e.target.innerText);
+      var handType = getHandType(e.target.parentNode.className);
+      e.dataTransfer.setData("text/plain", handType);
       e.dataTransfer.dropEffect = "copy";
     }
   }, {
@@ -330,21 +332,19 @@ function (_React$Component) {
   }, {
     key: "onDragStop",
     value: function onDragStop(e) {
-      // console.log("onDragStop", e);
-      var cData = e.dataTransfer.getData("text/plain");
-      var val = parseInt(e.target.innerText) + parseInt(cData);
-      this.props.onChange(val);
+      var handType = e.dataTransfer.getData("text/plain");
+      this.props.onChange(handType);
     }
   }, {
     key: "render",
     value: function render() {
       return _react["default"].createElement("div", {
         className: "score " + this.props.type,
-        draggable: this.props.type == "current",
+        draggable: this.props.canAttack,
         onDragStart: this.onDragStart,
         onDragOver: this.onDragOver,
         onDrop: this.onDragStop
-      }, mod5(this.props.score));
+      }, this.props.score);
     }
   }]);
 
@@ -451,6 +451,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+var mod5 = function mod5(v) {
+  return v % 5;
+}; // TODO utilにまとめる
+
+
 var getRandomInt = function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
@@ -465,6 +470,57 @@ var getRandomIntWithIgnore = function getRandomIntWithIgnore(max, ignore) {
   return randomInt;
 };
 
+var getAvailableHandType = function getAvailableHandType(player) {
+  var toScoreIdx = getRandomInt(player.hands.length);
+  var nextScoreBefore = player.hands[toScoreIdx].score;
+  var loopLimit = player.hands.length;
+
+  while (nextScoreBefore == 0 && loopLimit > 0) {
+    toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
+    nextScoreBefore = player.hands[toScoreIdx].score;
+    loopLimit--;
+  }
+
+  return player.hands[toScoreIdx].type;
+};
+
+var getPlayerIdx = function getPlayerIdx(players, name) {
+  return players.findIndex(function (p) {
+    return p.name == name;
+  }); // TODO IE 非対応
+};
+
+var getHandScore = function getHandScore(hands, type) {
+  return hands[hands.findIndex(function (h) {
+    return h.type == type;
+  })].score;
+};
+
+var isBreak = function isBreak(player) {
+  var breakHands = player.hands.filter(function (h) {
+    return h.score % 5 == 0;
+  });
+  return breakHands.length == player.hands.length;
+};
+
+var getTurnAfterHands = function getTurnAfterHands(player, type, attackScore) {
+  console.log(player, attackScore);
+  return player.hands.map(function (h) {
+    h.history.unshift({
+      score: h.score
+    });
+
+    if (type == h.type) {
+      h.score = mod5(h.score + attackScore);
+    }
+
+    return h;
+  });
+};
+
+var user = "user";
+var opponent = "opponent";
+
 var Stage =
 /*#__PURE__*/
 function (_React$Component) {
@@ -478,8 +534,9 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Stage).call(this, props));
     _this.state = {
       turnIdx: 0,
+      attacker: user,
       players: [{
-        name: "user",
+        name: user,
         hands: [{
           type: "left",
           score: 1,
@@ -490,7 +547,7 @@ function (_React$Component) {
           history: []
         }]
       }, {
-        name: "opponent",
+        name: opponent,
         hands: [{
           type: "left",
           score: 1,
@@ -508,59 +565,59 @@ function (_React$Component) {
 
   _createClass(Stage, [{
     key: "onChangeTurn",
-    value: function onChangeTurn(name, type, score) {
-      // TODO リファクタリング
+    value: function onChangeTurn(name, type, fromType) {
+      // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
+      // TODO name == attackerの場合、自分攻撃と判断できる。
+      if (this.state.attacker == name) {
+        console.log("self attacked");
+        return;
+      }
+
       var players = this.state.players; // turnAfter process
+      // attacker
 
-      var attackedIdx = players.findIndex(function (p) {
-        return p.name == name;
-      }); // TODO IE 非対応
+      var attacker = players[getPlayerIdx(players, this.state.attacker)];
+      var attackScore = getHandScore(attacker.hands, fromType); // attacked
 
-      var attackedPlayers = players[attackedIdx];
-      var hands = attackedPlayers.hands.map(function (h) {
-        h.history.unshift({
-          score: h.score
-        });
+      var attackedPlayer = players[getPlayerIdx(players, name)];
+      var attackedHandScore = getHandScore(attackedPlayer.hands, type);
 
-        if (type == h.type) {
-          h.score = score;
-        }
+      if (attackedHandScore == 0) {
+        console.log("target hand is zero. its disabled attacked.");
+        return;
+      }
 
-        return h;
-      });
-      attackedPlayers.hands = hands;
-      players[attackedIdx] = attackedPlayers; // すべてのHandsが使用不可の場合、敗北と判定
+      attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
+      players[getPlayerIdx(players, name)] = attackedPlayer; // すべてのHandsが使用不可の場合、敗北と判定
 
-      var breakHands = attackedPlayers.hands.filter(function (h) {
-        return h.score % 5 == 0;
-      });
-      var isBreak = breakHands.length == attackedPlayers.hands.length;
+      if (isBreak(attackedPlayer)) {
+        this.props.setAppStatus(9); // TODO 定数化
 
-      if (isBreak) {
-        console.log(attackedPlayers.name, " before Players isBreak");
+        console.log(attackedPlayer.name, " before Players isBreak");
+        return;
       } // change turn process
 
 
       var idx = this.state.turnIdx;
       idx++;
+      var fromIdx = idx % players.length; // automation attack process
+
+      var fromPlayer = players[fromIdx];
       this.setState({
         turnIdx: idx,
-        players: players
-      }); // automation attack process
+        players: players,
+        attacker: fromPlayer.name
+      });
 
-      var fromIdx = idx % players.length;
-      var fromPlayer = players[fromIdx];
-
-      if (fromPlayer.name != "user") {
+      if (fromPlayer.name != user) {
+        // user 以外の場合、攻撃の自動化
         setTimeout(function () {
-          var fromScoreIdx = getRandomInt(fromPlayer.hands.length);
-          var toIdx = getRandomIntWithIgnore(players.length, fromIdx); // TODO n 以外の乱数
+          // 攻撃可能な値
+          var fromHandType = getAvailableHandType(fromPlayer); // 被攻撃相手(TODO 生存している人に絞る）
 
-          var toPlayer = players[toIdx];
-          var toScoreIdx = getRandomInt(toPlayer.hands.length);
-          var nextType = toPlayer.hands[toScoreIdx].type;
-          var nextScore = toPlayer.hands[toScoreIdx].score + fromPlayer.hands[fromScoreIdx].score;
-          this.onChangeTurn(toPlayer.name, nextType, nextScore);
+          var toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
+          var toHandType = getAvailableHandType(toPlayer);
+          this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
         }.bind(this), 1500);
       }
     }
@@ -576,7 +633,7 @@ function (_React$Component) {
           key: idx,
           name: p.name,
           hands: p.hands,
-          canAttack: _this2.props.turnIdx % _this2.state.players.length == 0,
+          canAttack: _this2.state.attacker == p.name && p.name == user,
           onChangeTurn: _this2.onChangeTurn
         });
       }));

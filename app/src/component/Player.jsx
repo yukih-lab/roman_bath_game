@@ -5,8 +5,8 @@ class Player extends React.Component{
         super(props);
         this.onChange = this.onChange.bind(this);
     }
-    onChange(type, score) {
-        this.props.onChangeTurn(this.props.name, type, score);
+    onChange(toHandType, fromHandType) {
+        this.props.onChangeTurn(this.props.name, toHandType, fromHandType);
     }
 
     render() {
@@ -20,6 +20,7 @@ class Player extends React.Component{
                             type={h.type}
                             score={h.score}
                             history={h.history}
+                            canAttack={this.props.canAttack}
                             onChange={this.onChange}
                         />)
                 }

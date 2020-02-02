@@ -7,14 +7,15 @@ class Hand extends React.Component {
         super(props);
         this.onChange = this.onChange.bind(this);
     }
-    onChange(score) {
-        this.props.onChange(this.props.type, score);
+    onChange(fromHandType) {
+        this.props.onChange(this.props.type, fromHandType);
     }
     render() {
         return (
             <div className={"hand " + this.props.type}>
                 <Score type={ this.props.score % 5 == 0 ? "break" : "current"}
                        score={this.props.score}
+                       canAttack={this.props.canAttack}
                        onChange={this.onChange}/>
                 <History scores={this.props.history}/>
             </div>

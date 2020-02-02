@@ -1,5 +1,6 @@
 import React from 'react';
 import Player from "./Player.jsx";
+const mod5 = (v) => v % 5; // TODO utilにまとめる
 const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 const getRandomIntWithIgnore = (max, ignore) => {
     let randomInt;
@@ -8,18 +9,51 @@ const getRandomIntWithIgnore = (max, ignore) => {
     }
     return randomInt;
 };
+const getAvailableHandType = (player) => {
+    let toScoreIdx = getRandomInt(player.hands.length);
+    let nextScoreBefore = player.hands[toScoreIdx].score;
+    let loopLimit = player.hands.length;
+    while (nextScoreBefore == 0 && loopLimit > 0) {
+        toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
+        nextScoreBefore = player.hands[toScoreIdx].score;
+        loopLimit--;
+    }
+    return player.hands[toScoreIdx].type;
+};
+const getPlayerIdx = (players, name) => {
+    return players.findIndex(p => p.name == name);// TODO IE 非対応
+};
+const getHandScore = (hands, type) => {
+    return hands[hands.findIndex(h => h.type == type)].score;
+};
+const isBreak = (player) => {
+    let breakHands = player.hands.filter(h => h.score % 5 == 0);
+    return breakHands.length == player.hands.length;
+};
+const getTurnAfterHands = (player, type, attackScore) => {
+    return player.hands.map(h => {
+            h.history.unshift({score: h.score});
+            if (type == h.type) {
+                h.score = mod5(h.score + attackScore);
+            }
+            return h;
+        });
+};
+const user = "user";
+const opponent = "opponent";
 class Stage extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
             turnIdx : 0,
+            attacker : user,
             players : [
-                { name : "user",
+                { name : user,
                   hands : [
                       {type : "left" , score : 1, history : []},
                       {type : "right" , score : 1, history : []}
                   ]},
-                { name : "opponent",
+                { name : opponent,
                   hands : [
                       {type : "left" , score : 1, history : []},
                       {type : "right" , score : 1, history : []}
@@ -27,48 +61,52 @@ class Stage extends React.Component  {
         };
         this.onChangeTurn = this.onChangeTurn.bind(this);
     }
-    onChangeTurn(name, type, score) {
-        // TODO リファクタリング
+    onChangeTurn(name, type, fromType) {
+        // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
+        // TODO name == attackerの場合、自分攻撃と判断できる。
+        if (this.state.attacker == name) {
+            console.log("self attacked");
+            return;
+        }
 
         let players = this.state.players;
         // turnAfter process
-        let attackedIdx = players.findIndex(p => p.name == name); // TODO IE 非対応
-        let attackedPlayers = players[attackedIdx];
-        let hands = attackedPlayers.hands
-            .map(h => {
-                h.history.unshift({score: h.score});
-                if (type == h.type) {
-                    h.score = score;
-                }
-                return h;
-           });
-        attackedPlayers.hands = hands;
-        players[attackedIdx] = attackedPlayers;
+        // attacker
+        let attacker = players[getPlayerIdx(players, this.state.attacker)];
+        let attackScore = getHandScore(attacker.hands, fromType);
+        // attacked
+        let attackedPlayer = players[getPlayerIdx(players, name)];
+        let attackedHandScore = getHandScore(attackedPlayer.hands, type);
+        if (attackedHandScore == 0) {
+            console.log("target hand is zero. its disabled attacked.");
+            return;
+        }
+        attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
+        players[getPlayerIdx(players, name)] = attackedPlayer;
 
         // すべてのHandsが使用不可の場合、敗北と判定
-        let breakHands = attackedPlayers.hands.filter(h => h.score % 5 == 0);
-        let isBreak = breakHands.length == attackedPlayers.hands.length;
-        if (isBreak) {
-            console.log(attackedPlayers.name, " before Players isBreak");
+        if (isBreak(attackedPlayer)) {
+            this.props.setAppStatus(9);// TODO 定数化
+            console.log(attackedPlayer.name, " before Players isBreak");
+            return;
         }
 
         // change turn process
         let idx = this.state.turnIdx;
         idx++;
-        this.setState({turnIdx : idx, players : players});
+        let fromIdx = idx % players.length; // automation attack process
+        let fromPlayer =  players[fromIdx];
+        this.setState({turnIdx : idx, players : players, attacker : fromPlayer.name});
 
-        // automation attack process
-        let fromIdx = idx % players.length;
-        let fromPlayer = players[fromIdx];
-        if (fromPlayer.name != "user") {
+        if (fromPlayer.name != user) {
+            // user 以外の場合、攻撃の自動化
             setTimeout((function() {
-                let fromScoreIdx = getRandomInt(fromPlayer.hands.length);
-                let toIdx = getRandomIntWithIgnore(players.length, fromIdx);
-                let toPlayer = players[toIdx];
-                let toScoreIdx = getRandomInt(toPlayer.hands.length);
-                let nextType = toPlayer.hands[toScoreIdx].type;
-                let nextScore = toPlayer.hands[toScoreIdx].score + fromPlayer.hands[fromScoreIdx].score;
-                this.onChangeTurn(toPlayer.name, nextType, nextScore);
+                // 攻撃可能な値
+                let fromHandType = getAvailableHandType(fromPlayer);
+                // 被攻撃相手(TODO 生存している人に絞る）
+                let toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
+                let toHandType = getAvailableHandType(toPlayer);
+                this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
             }).bind(this), 1500);
         }
     }
@@ -82,7 +120,7 @@ class Stage extends React.Component  {
                             key={idx}
                             name={p.name}
                             hands={p.hands}
-                            canAttack={ this.props.turnIdx % this.state.players.length == 0 }
+                            canAttack={ this.state.attacker == p.name && p.name == user }
                             onChangeTurn = {this.onChangeTurn}
                         />)
                 }
