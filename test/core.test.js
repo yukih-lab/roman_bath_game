@@ -69,8 +69,8 @@ function entryPointScenario() {
 
 // スコアを取得
 function getTurnHalf(turn, turnUser, p1, p2) {
-    let per5 = (v) => v % 5;
-    return [turn, turnUser, per5(p1.l), per5(p1.r), per5(p2.l), per5(p2.r)];
+    let mod5 = (v) => v % 5;
+    return [turn, turnUser, mod5(p1.l), mod5(p1.r), mod5(p2.l), mod5(p2.r)];
 };
 
 // 結果出力
@@ -116,12 +116,12 @@ function entryPointAutomatic() {
 
 // ログ出力
 function outLog(title, p1, p2) {
-    let per5 = (v) => v % 5;
+    let mod5 = (v) => v % 5;
     console.log(title,
-        per5(p1.l),
-        per5(p1.r),
-        per5(p2.l),
-        per5(p2.r));
+        mod5(p1.l),
+        mod5(p1.r),
+        mod5(p2.l),
+        mod5(p2.r));
 };
 
 // 実行

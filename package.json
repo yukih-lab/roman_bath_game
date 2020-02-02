@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "description": "roman bath game project.",
-  "main": "app/src/core.js",
+  "main": "app/src/",
   "repository": {
     "type": "git",
     "url": "https://github.com/yukih-lab/roman_bath_game"
   },
+  "___comment" : "npm run test, npm run build",
   "scripts": {
     "test": "echo \\ do test \\ && node test/core.test.js ",
     "build": "echo \\ do build \\ && browserify -t [ babelify --presets [ @babel/preset-env @babel/preset-react] ] app/src/index.js  -o ./app/bundle.js "
