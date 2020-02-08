@@ -79,7 +79,7 @@ function (_React$Component) {
 var _default = App;
 exports["default"] = _default;
 
-},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":18}],2:[function(require,module,exports){
+},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":19}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -156,7 +156,7 @@ function (_React$Component) {
 var _default = Hand;
 exports["default"] = _default;
 
-},{"./History.jsx":3,"./Score.jsx":5,"react":18}],3:[function(require,module,exports){
+},{"./History.jsx":3,"./Score.jsx":5,"react":19}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -185,7 +185,7 @@ var History = function History(props) {
 var _default = History;
 exports["default"] = _default;
 
-},{"./Score.jsx":5,"react":18}],4:[function(require,module,exports){
+},{"./Score.jsx":5,"react":19}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -265,7 +265,7 @@ function (_React$Component) {
 var _default = Player;
 exports["default"] = _default;
 
-},{"./Hand.jsx":2,"react":18}],5:[function(require,module,exports){
+},{"./Hand.jsx":2,"react":19}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -355,7 +355,7 @@ function (_React$Component) {
 var _default = Score;
 exports["default"] = _default;
 
-},{"react":18}],6:[function(require,module,exports){
+},{"react":19}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -419,7 +419,7 @@ function (_React$Component) {
 var _default = Screen;
 exports["default"] = _default;
 
-},{"react":18}],7:[function(require,module,exports){
+},{"react":19}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -430,6 +430,8 @@ exports["default"] = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 var _Player = _interopRequireDefault(require("./Player.jsx"));
+
+var _core = _interopRequireDefault(require("../core.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -451,104 +453,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var mod5 = function mod5(v) {
-  return v % 5;
-}; // TODO utilにまとめる
-
-
-var getRandomInt = function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-};
-
-var getRandomIntWithIgnore = function getRandomIntWithIgnore(max, ignores) {
-  if (Array.isArray(ignores) == false) {
-    ignores = [ignores];
-  }
-
-  if (max < ignores.length) {
-    throw Error("illegalArgumentsException.");
-  }
-
-  var retInt;
-
-  var _loop = function _loop() {
-    console.log("getRandomIntWithIgnore");
-    var randomInt = getRandomInt(max);
-
-    if (ignores.findIndex(function (idx) {
-      return idx == randomInt;
-    }) < 0) {
-      retInt = randomInt;
-      return "break";
-    }
-  };
-
-  while (true) {
-    var _ret = _loop();
-
-    if (_ret === "break") break;
-  }
-
-  return retInt;
-};
-
-var getAvailableHandType = function getAvailableHandType(player) {
-  var loopLimit = player.hands.length;
-  var ignores = [];
-  var toScoreIdx;
-
-  while (loopLimit >= 0) {
-    try {
-      toScoreIdx = getRandomIntWithIgnore(loopLimit, ignores);
-
-      if (player.hands[toScoreIdx].score > 0) {
-        break;
-      }
-
-      ignores.push(toScoreIdx);
-    } catch (e) {
-      /* NOP */
-    }
-
-    loopLimit--;
-  }
-
-  return player.hands[toScoreIdx].type;
-};
-
-var getPlayerIdx = function getPlayerIdx(players, name) {
-  return players.findIndex(function (p) {
-    return p.name == name;
-  }); // TODO IE 非対応
-};
-
-var getHandScore = function getHandScore(hands, type) {
-  return hands[hands.findIndex(function (h) {
-    return h.type == type;
-  })].score; // TODO IE 非対応
-};
-
-var isBreak = function isBreak(player) {
-  var breakHands = player.hands.filter(function (h) {
-    return h.score % 5 == 0;
-  });
-  return breakHands.length == player.hands.length;
-};
-
-var getTurnAfterHands = function getTurnAfterHands(player, type, attackScore) {
-  return player.hands.map(function (h) {
-    h.history.unshift({
-      score: h.score
-    });
-
-    if (type == h.type) {
-      h.score = mod5(h.score + attackScore);
-    }
-
-    return h;
-  });
-};
-
 var user = "user";
 var opponent = "opponent";
 
@@ -566,29 +470,7 @@ function (_React$Component) {
     _this.state = {
       turnIdx: 0,
       attacker: user,
-      players: [{
-        name: user,
-        hands: [{
-          type: "left",
-          score: 1,
-          history: []
-        }, {
-          type: "right",
-          score: 1,
-          history: []
-        }]
-      }, {
-        name: opponent,
-        hands: [{
-          type: "left",
-          score: 1,
-          history: []
-        }, {
-          type: "right",
-          score: 1,
-          history: []
-        }]
-      }]
+      players: [_core["default"].createPlayer(user), _core["default"].createPlayer(opponent)]
     };
     _this.onChangeTurn = _this.onChangeTurn.bind(_assertThisInitialized(_this));
     return _this;
@@ -606,23 +488,24 @@ function (_React$Component) {
       }
 
       var players = this.state.players; // turnAfter process
-      // attacked
+      // to
 
-      var toP = players[getPlayerIdx(players, toName)];
-      var toHandScore = getHandScore(toP.hands, toType);
+      var toP = _core["default"].getPlayer(players, toName);
 
-      if (toHandScore == 0) {
+      if (_core["default"].getHandScore(toP, toType) == 0) {
         console.log("target hand is zero. its disabled attacked.");
         return;
-      } // attacker
+      } // from
 
 
-      var fromP = players[getPlayerIdx(players, this.state.attacker)];
-      var fromHandScore = getHandScore(fromP.hands, fromType);
-      toP.hands = getTurnAfterHands(toP, toType, fromHandScore);
-      players[getPlayerIdx(players, toName)] = toP; // すべてのHandsが使用不可の場合、敗北と判定
+      var fromP = _core["default"].getPlayer(players, this.state.attacker);
 
-      if (isBreak(toP)) {
+      toP.hands = _core["default"].getTurnAfterHands(toP.hands, toType, _core["default"].getHandScore(fromP, fromType));
+
+      _core["default"].applyPlayers(players, toP); // すべてのHandsが使用不可の場合、敗北と判定
+
+
+      if (_core["default"].isBreak(toP)) {
         this.props.setAppStatus(9); // TODO 定数化
 
         console.log(toP.name, " before Players isBreak");
@@ -632,24 +515,18 @@ function (_React$Component) {
 
       var idx = this.state.turnIdx;
       idx++;
-      var fromIdx = idx % players.length; // automation attack process
-
-      fromP = players[fromIdx];
+      fromP = _core["default"].getTurnPlayer(players, idx);
       this.setState({
         turnIdx: idx,
         players: players,
         attacker: fromP.name
-      }); // TODO 以下の処理は別メソッドにするなど
+      });
 
       if (fromP.name != user) {
         // user 以外の場合、攻撃の自動化
         setTimeout(function () {
-          // 攻撃可能な値
-          var fromHandType = getAvailableHandType(fromP); // 被攻撃相手(TODO 生存している人に絞る）
-
-          toP = players[getRandomIntWithIgnore(players.length, fromIdx)];
-          var toHandType = getAvailableHandType(toP);
-          this.onChangeTurn(toP.name, toHandType, fromHandType);
+          toP = _core["default"].getPlayerWithIgnore(players, fromP);
+          this.onChangeTurn(toP.name, _core["default"].getAvailableHandType(toP), _core["default"].getAvailableHandType(fromP));
         }.bind(this), 1500);
       }
     }
@@ -679,7 +556,157 @@ function (_React$Component) {
 var _default = Stage;
 exports["default"] = _default;
 
-},{"./Player.jsx":4,"react":18}],8:[function(require,module,exports){
+},{"../core.js":8,"./Player.jsx":4,"react":19}],8:[function(require,module,exports){
+'use strict';
+
+var _player = {
+  hands: []
+};
+var _hand = {
+  score: 1,
+  history: []
+};
+module.exports = {
+  // TODO リファクタリング、コード見直しが必要
+  // TODO objectプロパティとしてのメソッド定義と、オブジェクトのビルドインメソッド定義とでどのような違いがあるのか？
+  //             this 参照が必要な場合、ビルドインメソッドとして定義すべきのようだ
+  createPlayer: function createPlayer(name) {
+    var p = Object.assign({
+      name: name
+    }, JSON.parse(JSON.stringify(_player)));
+    p.hands.push(this.createHand("left"));
+    p.hands.push(this.createHand("right"));
+    return p;
+  },
+  createHand: function createHand(type) {
+    return Object.assign({
+      type: type
+    }, JSON.parse(JSON.stringify(_hand)));
+  },
+  mod5: function mod5(v) {
+    return v % 5;
+  },
+  // TODO max + 1しないとmax値未満の値を返却する
+  getRandomInt: function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max + 1));
+  },
+  getRandomIntWithIgnore: function getRandomIntWithIgnore(max, ignores) {
+    var _this = this;
+
+    console.log("max, ignores", max, ignores);
+
+    if (Array.isArray(ignores) == false) {
+      ignores = [ignores];
+    }
+
+    if (max < ignores.length) {
+      throw Error("illegalArgumentsException.");
+    }
+
+    var retInt;
+
+    var _loop = function _loop() {
+      console.log("getRandomIntWithIgnore");
+
+      var randomInt = _this.getRandomInt(max);
+
+      if (ignores.findIndex(function (idx) {
+        return idx == randomInt;
+      }) < 0) {
+        retInt = randomInt;
+        return "break";
+      }
+    };
+
+    while (true) {
+      var _ret = _loop();
+
+      if (_ret === "break") break;
+    }
+
+    return retInt;
+  },
+  getPlayerWithIgnore: function getPlayerWithIgnore(players, ignoreP) {
+    // 被攻撃相手(TODO 生存している人に絞る）
+    console.log("getPlayerWithIgnore");
+    return players[this.getRandomIntWithIgnore(players.length, this.getPlayerIdx(players, ignoreP.name))];
+  },
+  getAvailableHandType: function getAvailableHandType(player) {
+    var loopLimit = player.hands.length;
+    var ignores = [];
+    var retIdx;
+
+    while (loopLimit >= 0) {
+      try {
+        console.log("getAvailableHandType");
+        var toScoreIdx = this.getRandomIntWithIgnore(loopLimit, ignores);
+
+        if (player.hands[toScoreIdx].score > 0) {
+          retIdx = toScoreIdx;
+          break;
+        }
+
+        ignores.push(toScoreIdx);
+      } catch (e) {
+        /* NOP */
+      }
+
+      loopLimit--;
+    }
+
+    return player.hands[retIdx].type;
+  },
+  getPlayerIdx: function getPlayerIdx(players, name) {
+    return players.findIndex(function (p) {
+      return p.name == name;
+    }); // TODO IE 非対応
+  },
+  getHandScore: function getHandScore(player, type) {
+    return this.getHandProp(this.getHand(player, type), "score");
+  },
+  getPlayer: function getPlayer(players, name) {
+    return players[players.findIndex(function (p) {
+      return p.name == name;
+    })]; // TODO IE 非対応
+  },
+  getTurnPlayer: function getTurnPlayer(players, turnIdx) {
+    return players[turnIdx % players.length];
+  },
+  getHand: function getHand(player, type) {
+    return player.hands[player.hands.findIndex(function (h) {
+      return h.type == type;
+    })]; // TODO IE 非対応
+  },
+  getHandProp: function getHandProp(hand, propName) {
+    return hand[propName];
+  },
+  applyPlayers: function applyPlayers(players, player) {
+    players[this.getPlayerIdx(players, player.name)] = player;
+  },
+  isBreak: function isBreak(player) {
+    var breakHands = player.hands.filter(function (h) {
+      return h.score % 5 == 0;
+    });
+    return breakHands.length == player.hands.length;
+  },
+  getTurnAfterHands: function getTurnAfterHands(hands, type, attackScore) {
+    var _this2 = this;
+
+    return hands.map(function (h) {
+      h.history.unshift({
+        score: h.score
+      });
+
+      if (type == h.type) {
+        h.score = _this2.mod5(h.score + attackScore);
+      }
+
+      return h;
+    });
+  }
+};
+
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -695,7 +722,7 @@ window.addEventListener("load", function () {
   _reactDom["default"].render(_react["default"].createElement(_App["default"], null), document.getElementById('root'));
 }, false);
 
-},{"./App.jsx":1,"react":18,"react-dom":15}],9:[function(require,module,exports){
+},{"./App.jsx":1,"react":19,"react-dom":16}],10:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -787,7 +814,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -973,7 +1000,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1079,7 +1106,7 @@ checkPropTypes.resetWarningCache = function() {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":12,"_process":10}],12:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":13,"_process":11}],13:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -1093,7 +1120,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react-dom.development.js
@@ -28824,7 +28851,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11,"react":18,"scheduler":23,"scheduler/tracing":24}],14:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12,"react":19,"scheduler":24,"scheduler/tracing":25}],15:[function(require,module,exports){
 /** @license React v16.11.0
  * react-dom.production.min.js
  *
@@ -29116,7 +29143,7 @@ xe,ye,Ca.injectEventPluginsByName,fa,Sc,function(a){ya(a,Rc)},cb,db,Pd,Ba,Sj,{cu
 (function(a){var b=a.findFiberByHostInstance;return ok(n({},a,{overrideHookState:null,overrideProps:null,setSuspenseHandler:null,scheduleUpdate:null,currentDispatcherRef:Ea.ReactCurrentDispatcher,findHostInstanceByFiber:function(a){a=ic(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null},findHostInstancesForRefresh:null,scheduleRefresh:null,scheduleRoot:null,setRefreshHandler:null,getCurrentFiber:null}))})({findFiberByHostInstance:Fc,bundleType:0,version:"16.11.0",
 rendererPackageName:"react-dom"});var Dk={default:Ck},Ek=Dk&&Ck||Dk;module.exports=Ek.default||Ek;
 
-},{"object-assign":9,"react":18,"scheduler":23}],15:[function(require,module,exports){
+},{"object-assign":10,"react":19,"scheduler":24}],16:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29158,7 +29185,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":13,"./cjs/react-dom.production.min.js":14,"_process":10}],16:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":14,"./cjs/react-dom.production.min.js":15,"_process":11}],17:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react.development.js
@@ -31480,7 +31507,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11}],17:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12}],18:[function(require,module,exports){
 /** @license React v16.11.0
  * react.production.min.js
  *
@@ -31507,7 +31534,7 @@ b,c){return W().useImperativeHandle(a,b,c)},useDebugValue:function(){},useLayout
 if(null!=b){void 0!==b.ref&&(g=b.ref,l=J.current);void 0!==b.key&&(d=""+b.key);if(a.type&&a.type.defaultProps)var f=a.type.defaultProps;for(k in b)K.call(b,k)&&!L.hasOwnProperty(k)&&(e[k]=void 0===b[k]&&void 0!==f?f[k]:b[k])}var k=arguments.length-2;if(1===k)e.children=c;else if(1<k){f=Array(k);for(var m=0;m<k;m++)f[m]=arguments[m+2];e.children=f}return{$$typeof:p,type:a.type,key:d,ref:g,props:e,_owner:l}},createFactory:function(a){var b=M.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.11.0",
 __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentDispatcher:I,ReactCurrentBatchConfig:{suspense:null},ReactCurrentOwner:J,IsSomeRendererActing:{current:!1},assign:h}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":9}],18:[function(require,module,exports){
+},{"object-assign":10}],19:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -31518,7 +31545,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":16,"./cjs/react.production.min.js":17,"_process":10}],19:[function(require,module,exports){
+},{"./cjs/react.development.js":17,"./cjs/react.production.min.js":18,"_process":11}],20:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler-tracing.development.js
@@ -31943,7 +31970,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],20:[function(require,module,exports){
+},{"_process":11}],21:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler-tracing.production.min.js
  *
@@ -31955,7 +31982,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler.development.js
@@ -32984,7 +33011,7 @@ exports.unstable_Profiling = unstable_Profiling;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],22:[function(require,module,exports){
+},{"_process":11}],23:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler.production.min.js
  *
@@ -33008,7 +33035,7 @@ exports.unstable_scheduleCallback=function(a,b,c){var d=exports.unstable_now();i
 exports.unstable_wrapCallback=function(a){var b=S;return function(){var c=S;S=b;try{return a.apply(this,arguments)}finally{S=c}}};exports.unstable_getCurrentPriorityLevel=function(){return S};exports.unstable_shouldYield=function(){var a=exports.unstable_now();W(a);var b=M(O);return b!==R&&null!==R&&null!==b&&null!==b.callback&&b.startTime<=a&&b.expirationTime<R.expirationTime||k()};exports.unstable_requestPaint=aa;exports.unstable_continueExecution=function(){U||T||(U=!0,f(Y))};
 exports.unstable_pauseExecution=function(){};exports.unstable_getFirstCallbackNode=function(){return M(O)};exports.unstable_Profiling=null;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33019,7 +33046,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":21,"./cjs/scheduler.production.min.js":22,"_process":10}],24:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":22,"./cjs/scheduler.production.min.js":23,"_process":11}],25:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33030,4 +33057,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":19,"./cjs/scheduler-tracing.production.min.js":20,"_process":10}]},{},[8]);
+},{"./cjs/scheduler-tracing.development.js":20,"./cjs/scheduler-tracing.production.min.js":21,"_process":11}]},{},[9]);
