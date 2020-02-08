@@ -460,24 +460,56 @@ var getRandomInt = function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-var getRandomIntWithIgnore = function getRandomIntWithIgnore(max, ignore) {
-  var randomInt;
-
-  while (randomInt == undefined || randomInt == ignore) {
-    randomInt = getRandomInt(max);
+var getRandomIntWithIgnore = function getRandomIntWithIgnore(max, ignores) {
+  if (Array.isArray(ignores) == false) {
+    ignores = [ignores];
   }
 
-  return randomInt;
+  if (max < ignores.length) {
+    throw Error("illegalArgumentsException.");
+  }
+
+  var retInt;
+
+  var _loop = function _loop() {
+    console.log("getRandomIntWithIgnore");
+    var randomInt = getRandomInt(max);
+
+    if (ignores.findIndex(function (idx) {
+      return idx == randomInt;
+    }) < 0) {
+      retInt = randomInt;
+      return "break";
+    }
+  };
+
+  while (true) {
+    var _ret = _loop();
+
+    if (_ret === "break") break;
+  }
+
+  return retInt;
 };
 
 var getAvailableHandType = function getAvailableHandType(player) {
-  var toScoreIdx = getRandomInt(player.hands.length);
-  var nextScoreBefore = player.hands[toScoreIdx].score;
   var loopLimit = player.hands.length;
+  var ignores = [];
+  var toScoreIdx;
 
-  while (nextScoreBefore == 0 && loopLimit > 0) {
-    toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
-    nextScoreBefore = player.hands[toScoreIdx].score;
+  while (loopLimit >= 0) {
+    try {
+      toScoreIdx = getRandomIntWithIgnore(loopLimit, ignores);
+
+      if (player.hands[toScoreIdx].score > 0) {
+        break;
+      }
+
+      ignores.push(toScoreIdx);
+    } catch (e) {
+      /* NOP */
+    }
+
     loopLimit--;
   }
 
@@ -493,7 +525,7 @@ var getPlayerIdx = function getPlayerIdx(players, name) {
 var getHandScore = function getHandScore(hands, type) {
   return hands[hands.findIndex(function (h) {
     return h.type == type;
-  })].score;
+  })].score; // TODO IE 非対応
 };
 
 var isBreak = function isBreak(player) {
@@ -504,7 +536,6 @@ var isBreak = function isBreak(player) {
 };
 
 var getTurnAfterHands = function getTurnAfterHands(player, type, attackScore) {
-  console.log(player, attackScore);
   return player.hands.map(function (h) {
     h.history.unshift({
       score: h.score
@@ -565,35 +596,36 @@ function (_React$Component) {
 
   _createClass(Stage, [{
     key: "onChangeTurn",
-    value: function onChangeTurn(name, type, fromType) {
-      // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
-      // TODO name == attackerの場合、自分攻撃と判断できる。
-      if (this.state.attacker == name) {
+    value: function onChangeTurn(toName, toType, fromType) {
+      // toName == attackerの場合、自分攻撃と判断
+      if (this.state.attacker == toName) {
+        this.props.setAppStatus(5); // TODO 定数化
+
         console.log("self attacked");
         return;
       }
 
       var players = this.state.players; // turnAfter process
-      // attacker
+      // attacked
 
-      var attacker = players[getPlayerIdx(players, this.state.attacker)];
-      var attackScore = getHandScore(attacker.hands, fromType); // attacked
+      var toP = players[getPlayerIdx(players, toName)];
+      var toHandScore = getHandScore(toP.hands, toType);
 
-      var attackedPlayer = players[getPlayerIdx(players, name)];
-      var attackedHandScore = getHandScore(attackedPlayer.hands, type);
-
-      if (attackedHandScore == 0) {
+      if (toHandScore == 0) {
         console.log("target hand is zero. its disabled attacked.");
         return;
-      }
+      } // attacker
 
-      attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
-      players[getPlayerIdx(players, name)] = attackedPlayer; // すべてのHandsが使用不可の場合、敗北と判定
 
-      if (isBreak(attackedPlayer)) {
+      var fromP = players[getPlayerIdx(players, this.state.attacker)];
+      var fromHandScore = getHandScore(fromP.hands, fromType);
+      toP.hands = getTurnAfterHands(toP, toType, fromHandScore);
+      players[getPlayerIdx(players, toName)] = toP; // すべてのHandsが使用不可の場合、敗北と判定
+
+      if (isBreak(toP)) {
         this.props.setAppStatus(9); // TODO 定数化
 
-        console.log(attackedPlayer.name, " before Players isBreak");
+        console.log(toP.name, " before Players isBreak");
         return;
       } // change turn process
 
@@ -602,22 +634,22 @@ function (_React$Component) {
       idx++;
       var fromIdx = idx % players.length; // automation attack process
 
-      var fromPlayer = players[fromIdx];
+      fromP = players[fromIdx];
       this.setState({
         turnIdx: idx,
         players: players,
-        attacker: fromPlayer.name
-      });
+        attacker: fromP.name
+      }); // TODO 以下の処理は別メソッドにするなど
 
-      if (fromPlayer.name != user) {
+      if (fromP.name != user) {
         // user 以外の場合、攻撃の自動化
         setTimeout(function () {
           // 攻撃可能な値
-          var fromHandType = getAvailableHandType(fromPlayer); // 被攻撃相手(TODO 生存している人に絞る）
+          var fromHandType = getAvailableHandType(fromP); // 被攻撃相手(TODO 生存している人に絞る）
 
-          var toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
-          var toHandType = getAvailableHandType(toPlayer);
-          this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
+          toP = players[getRandomIntWithIgnore(players.length, fromIdx)];
+          var toHandType = getAvailableHandType(toP);
+          this.onChangeTurn(toP.name, toHandType, fromHandType);
         }.bind(this), 1500);
       }
     }

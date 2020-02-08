@@ -2,20 +2,36 @@ import React from 'react';
 import Player from "./Player.jsx";
 const mod5 = (v) => v % 5; // TODO utilにまとめる
 const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
-const getRandomIntWithIgnore = (max, ignore) => {
-    let randomInt;
-    while(randomInt == undefined || randomInt == ignore) {
-        randomInt = getRandomInt(max);
+const getRandomIntWithIgnore = (max, ignores) => {
+    if (Array.isArray(ignores) == false) {
+        ignores = [ignores];
     }
-    return randomInt;
+    if (max < ignores.length) {
+        throw Error("illegalArgumentsException.");
+    }
+    let retInt;
+    while(true) {
+        console.log("getRandomIntWithIgnore");
+        let randomInt = getRandomInt(max);
+        if (ignores.findIndex((idx) => idx == randomInt) < 0) {
+            retInt = randomInt;
+            break;
+        }
+    }
+    return retInt;
 };
 const getAvailableHandType = (player) => {
-    let toScoreIdx = getRandomInt(player.hands.length);
-    let nextScoreBefore = player.hands[toScoreIdx].score;
     let loopLimit = player.hands.length;
-    while (nextScoreBefore == 0 && loopLimit > 0) {
-        toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
-        nextScoreBefore = player.hands[toScoreIdx].score;
+    let ignores = [];
+    let toScoreIdx;
+    while (loopLimit >= 0) {
+        try {
+            toScoreIdx = getRandomIntWithIgnore(loopLimit, ignores);
+            if(player.hands[toScoreIdx].score > 0) {
+                break;
+            }
+            ignores.push(toScoreIdx);
+        } catch (e) { /* NOP */ }
         loopLimit--;
     }
     return player.hands[toScoreIdx].type;
@@ -24,7 +40,7 @@ const getPlayerIdx = (players, name) => {
     return players.findIndex(p => p.name == name);// TODO IE 非対応
 };
 const getHandScore = (hands, type) => {
-    return hands[hands.findIndex(h => h.type == type)].score;
+    return hands[hands.findIndex(h => h.type == type)].score;// TODO IE 非対応
 };
 const isBreak = (player) => {
     let breakHands = player.hands.filter(h => h.score % 5 == 0);
@@ -61,33 +77,33 @@ class Stage extends React.Component  {
         };
         this.onChangeTurn = this.onChangeTurn.bind(this);
     }
-    onChangeTurn(name, type, fromType) {
-        // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
-        // TODO name == attackerの場合、自分攻撃と判断できる。
-        if (this.state.attacker == name) {
+    onChangeTurn(toName, toType, fromType) {
+        // toName == attackerの場合、自分攻撃と判断
+        if (this.state.attacker == toName) {
+            this.props.setAppStatus(5);// TODO 定数化
             console.log("self attacked");
             return;
         }
 
         let players = this.state.players;
         // turnAfter process
-        // attacker
-        let attacker = players[getPlayerIdx(players, this.state.attacker)];
-        let attackScore = getHandScore(attacker.hands, fromType);
         // attacked
-        let attackedPlayer = players[getPlayerIdx(players, name)];
-        let attackedHandScore = getHandScore(attackedPlayer.hands, type);
-        if (attackedHandScore == 0) {
+        let toP = players[getPlayerIdx(players, toName)];
+        let toHandScore = getHandScore(toP.hands, toType);
+        if (toHandScore == 0) {
             console.log("target hand is zero. its disabled attacked.");
             return;
         }
-        attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
-        players[getPlayerIdx(players, name)] = attackedPlayer;
+        // attacker
+        let fromP = players[getPlayerIdx(players, this.state.attacker)];
+        let fromHandScore = getHandScore(fromP.hands, fromType);
+        toP.hands = getTurnAfterHands(toP, toType, fromHandScore);
+        players[getPlayerIdx(players, toName)] = toP;
 
         // すべてのHandsが使用不可の場合、敗北と判定
-        if (isBreak(attackedPlayer)) {
+        if (isBreak(toP)) {
             this.props.setAppStatus(9);// TODO 定数化
-            console.log(attackedPlayer.name, " before Players isBreak");
+            console.log(toP.name, " before Players isBreak");
             return;
         }
 
@@ -95,18 +111,19 @@ class Stage extends React.Component  {
         let idx = this.state.turnIdx;
         idx++;
         let fromIdx = idx % players.length; // automation attack process
-        let fromPlayer =  players[fromIdx];
-        this.setState({turnIdx : idx, players : players, attacker : fromPlayer.name});
+        fromP =  players[fromIdx];
+        this.setState({turnIdx : idx, players : players, attacker : fromP.name});
 
-        if (fromPlayer.name != user) {
+        // TODO 以下の処理は別メソッドにするなど
+        if (fromP.name != user) {
             // user 以外の場合、攻撃の自動化
             setTimeout((function() {
                 // 攻撃可能な値
-                let fromHandType = getAvailableHandType(fromPlayer);
+                let fromHandType = getAvailableHandType(fromP);
                 // 被攻撃相手(TODO 生存している人に絞る）
-                let toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
-                let toHandType = getAvailableHandType(toPlayer);
-                this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
+                toP = players[getRandomIntWithIgnore(players.length, fromIdx)];
+                let toHandType = getAvailableHandType(toP);
+                this.onChangeTurn(toP.name, toHandType, fromHandType);
             }).bind(this), 1500);
         }
     }
