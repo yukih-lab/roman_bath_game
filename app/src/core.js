@@ -13,14 +13,18 @@ module.exports = {
         p.hands.push(this.createHand("right"));
         return p;
     },
+
     createHand (type) {
-        return Object.assign({type : type}, JSON.parse(JSON.stringify(_hand)));
+        return Object.assign(
+            {type : type},
+            JSON.parse(JSON.stringify(_hand)));
     },
+
     mod5: (v) => v % 5,
-    // TODO max + 1しないとmax値未満の値を返却する
+    // max値未満の値しか返却しなくなるためmax + 1をる
     getRandomInt: max => Math.floor(Math.random() * Math.floor(max + 1)),
+
     getRandomIntWithIgnore (max, ignores) {
-        console.log("max, ignores",max, ignores)
         if (Array.isArray(ignores) == false) {
             ignores = [ignores];
         }
@@ -29,7 +33,6 @@ module.exports = {
         }
         let retInt;
         while (true) {
-            console.log("getRandomIntWithIgnore");
             let randomInt = this.getRandomInt(max);
             if (ignores.findIndex((idx) => idx == randomInt) < 0) {
                 retInt = randomInt;
@@ -38,6 +41,7 @@ module.exports = {
         }
         return retInt;
     },
+
     getPlayerWithIgnore(players, ignoreP) {
         // 被攻撃相手(TODO 生存している人に絞る）
         console.log("getPlayerWithIgnore");
@@ -45,6 +49,7 @@ module.exports = {
             this.getRandomIntWithIgnore(players.length, this.getPlayerIdx(players, ignoreP.name))
             ];
     },
+
     getAvailableHandType(player){
         let loopLimit = player.hands.length;
         let ignores = [];

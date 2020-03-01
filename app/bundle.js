@@ -488,19 +488,20 @@ function (_React$Component) {
       }
 
       var players = this.state.players; // turnAfter process
-      // to
+      // toP 被攻撃側
 
       var toP = _core["default"].getPlayer(players, toName);
 
       if (_core["default"].getHandScore(toP, toType) == 0) {
         console.log("target hand is zero. its disabled attacked.");
         return;
-      } // from
+      } // fromP 攻撃側
 
 
-      var fromP = _core["default"].getPlayer(players, this.state.attacker);
+      var fromP = _core["default"].getPlayer(players, this.state.attacker); // toPに対しfromPの攻撃を適用
 
-      toP.hands = _core["default"].getTurnAfterHands(toP.hands, toType, _core["default"].getHandScore(fromP, fromType));
+
+      toP.hands = _core["default"].getTurnAfterHands(toP.hands, toType, _core["default"].getHandScore(fromP, fromType)); // playersにtoPの変更を適用
 
       _core["default"].applyPlayers(players, toP); // すべてのHandsが使用不可の場合、敗北と判定
 
@@ -510,7 +511,7 @@ function (_React$Component) {
 
         console.log(toP.name, " before Players isBreak");
         return;
-      } // change turn process
+      } // change turn
 
 
       var idx = this.state.turnIdx;
@@ -586,14 +587,12 @@ module.exports = {
   mod5: function mod5(v) {
     return v % 5;
   },
-  // TODO max + 1しないとmax値未満の値を返却する
+  // max値未満の値しか返却しなくなるためmax + 1をる
   getRandomInt: function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max + 1));
   },
   getRandomIntWithIgnore: function getRandomIntWithIgnore(max, ignores) {
     var _this = this;
-
-    console.log("max, ignores", max, ignores);
 
     if (Array.isArray(ignores) == false) {
       ignores = [ignores];
@@ -606,8 +605,6 @@ module.exports = {
     var retInt;
 
     var _loop = function _loop() {
-      console.log("getRandomIntWithIgnore");
-
       var randomInt = _this.getRandomInt(max);
 
       if (ignores.findIndex(function (idx) {

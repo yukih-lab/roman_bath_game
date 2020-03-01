@@ -27,18 +27,21 @@ class Stage extends React.Component  {
 
         let players = this.state.players;
         // turnAfter process
-        // to
+        // toP 被攻撃側
         let toP = core.getPlayer(players, toName);
         if (core.getHandScore(toP, toType) == 0) {
             console.log("target hand is zero. its disabled attacked.");
             return;
         }
-        // from
+        // fromP 攻撃側
         let fromP = core.getPlayer(players, this.state.attacker);
+        // toPに対しfromPの攻撃を適用
         toP.hands = core.getTurnAfterHands(
             toP.hands,
             toType,
             core.getHandScore(fromP, fromType));
+
+        // playersにtoPの変更を適用
         core.applyPlayers(players, toP);
 
         // すべてのHandsが使用不可の場合、敗北と判定
@@ -48,7 +51,7 @@ class Stage extends React.Component  {
             return;
         }
 
-        // change turn process
+        // change turn
         let idx = this.state.turnIdx;
         idx++;
         fromP =  core.getTurnPlayer(players, idx);
