@@ -12,6 +12,7 @@ const _md5 = function() {
            test(targetFunc(i), predicate));
     }
 };
+
 const _getRandomInt = function() {
     let targetFunc = settingFunc(rbg.getRandomInt);
     let max = 16;
@@ -20,17 +21,34 @@ const _getRandomInt = function() {
         console.log("param", i, test(targetFunc(i), predicate));
     }
 };
-// TODO 重点的にテストしたいメソッド、 テストコードを検討する
+
 const _getRandomIntWithIgnore =  function() {
     let targetFunc = settingFunc(rbg.getRandomIntWithIgnore, rbg);
     let max = 100;
+    let target = 36;
     let ignores = [];
+    for (let i = 0; i <= max; i++) {
+        if (target != i) {
+            ignores.push(i);
+        }
+    }
     for (let i = 0; i < max; i++ ) {
-        let predicate = (v) => (0 <= v) && (v <= max) && (v != i);
+        let predicate = (v) => (target == v);
         console.log("param", i,
             test(targetFunc(max, ignores), predicate));
-        ignores.push(i);
     }
+};
+
+const _getPlayerWithIgnore =  function() {
+    let targetFunc = settingFunc(rbg.getPlayerWithIgnore, rbg);
+    let players = [
+        rbg.createPlayer("user"),
+        rbg.createPlayer("opponent"),
+    ];
+
+    let predicate = (p) => ("user" == p.name);
+    console.log("param",
+        test(targetFunc(players, [rbg.createPlayer("opponent")]), predicate));
 };
 
 function settingFunc(func, context) {
@@ -51,4 +69,5 @@ function test(func, predicate){
 
 // _md5();
 // _getRandomInt();
-_getRandomIntWithIgnore();
+// _getRandomIntWithIgnore();
+_getPlayerWithIgnore();

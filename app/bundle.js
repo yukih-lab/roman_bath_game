@@ -568,9 +568,11 @@ var _hand = {
   history: []
 };
 module.exports = {
-  // TODO リファクタリング、コード見直しが必要
-  // TODO objectプロパティとしてのメソッド定義と、オブジェクトのビルドインメソッド定義とでどのような違いがあるのか？
-  //             this 参照が必要な場合、ビルドインメソッドとして定義すべきのようだ
+  /**
+   * 引数.nameよりPlayer生成
+   * @param name
+   * @returns {any}
+   */
   createPlayer: function createPlayer(name) {
     var p = Object.assign({
       name: name
@@ -579,18 +581,43 @@ module.exports = {
     p.hands.push(this.createHand("right"));
     return p;
   },
+
+  /**
+   * 引数.typeよりHandを生成
+   * @param type
+   * @returns {any}
+   */
   createHand: function createHand(type) {
     return Object.assign({
       type: type
     }, JSON.parse(JSON.stringify(_hand)));
   },
+
+  /**
+   * 5で割ったあまりを返却
+   * @param v
+   * @returns {number}
+   */
   mod5: function mod5(v) {
     return v % 5;
   },
-  // max値未満の値しか返却しなくなるためmax + 1をる
+
+  /**
+   * 0<= x <= maxの乱数を返却
+   * @param max
+   * @returns {number}
+   */
   getRandomInt: function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max + 1));
   },
+
+  /**
+   * 0<= x <= maxの乱数のうちignoresに存在しない値を選択
+   * @param max
+   * @param max
+   * @param ignores
+   * @returns {*|number}
+   */
   getRandomIntWithIgnore: function getRandomIntWithIgnore(max, ignores) {
     var _this = this;
 
@@ -623,20 +650,34 @@ module.exports = {
 
     return retInt;
   },
+
+  /**
+   * ignorePを除く、任意のPlayerを取得
+   * @param players
+   * @param ignoreP
+   * @returns {*}
+   */
   getPlayerWithIgnore: function getPlayerWithIgnore(players, ignoreP) {
-    // 被攻撃相手(TODO 生存している人に絞る）
-    console.log("getPlayerWithIgnore");
-    return players[this.getRandomIntWithIgnore(players.length, this.getPlayerIdx(players, ignoreP.name))];
+    return players[this.getRandomIntWithIgnore(players.length - 1, this.getPlayerIdx(players, ignoreP.name))];
   },
+
+  /**
+   * Playerの生存している手を選択する.
+   * @param player
+   * @returns {*}
+   */
   getAvailableHandType: function getAvailableHandType(player) {
-    var loopLimit = player.hands.length;
+    if (this.isBreak(player)) {
+      throw Error("illegalArgumentsException.");
+    }
+
+    var max = player.hands.length - 1;
     var ignores = [];
     var retIdx;
 
-    while (loopLimit >= 0) {
+    while (true) {
       try {
-        console.log("getAvailableHandType");
-        var toScoreIdx = this.getRandomIntWithIgnore(loopLimit, ignores);
+        var toScoreIdx = this.getRandomIntWithIgnore(max, ignores);
 
         if (player.hands[toScoreIdx].score > 0) {
           retIdx = toScoreIdx;
@@ -647,45 +688,98 @@ module.exports = {
       } catch (e) {
         /* NOP */
       }
-
-      loopLimit--;
     }
 
     return player.hands[retIdx].type;
   },
+
+  /**
+   * 引数.nameに紐づくplayerを取得.
+   * @param players
+   * @param name
+   * @returns {*|number}
+   */
   getPlayerIdx: function getPlayerIdx(players, name) {
     return players.findIndex(function (p) {
       return p.name == name;
     }); // TODO IE 非対応
   },
+
+  /**
+   * 引数.typeの現在のスコアを取得
+   * @param player
+   * @param type
+   * @returns {*}
+   */
   getHandScore: function getHandScore(player, type) {
     return this.getHandProp(this.getHand(player, type), "score");
   },
+
+  /**
+   * @param players
+   * @param name
+   * @returns {*}
+   */
   getPlayer: function getPlayer(players, name) {
     return players[players.findIndex(function (p) {
       return p.name == name;
     })]; // TODO IE 非対応
   },
+
+  /**
+   * @param players
+   * @param turnIdx
+   * @returns {*}
+   */
   getTurnPlayer: function getTurnPlayer(players, turnIdx) {
     return players[turnIdx % players.length];
   },
+
+  /**
+   * @param player
+   * @param type
+   * @returns {*}
+   */
   getHand: function getHand(player, type) {
     return player.hands[player.hands.findIndex(function (h) {
       return h.type == type;
     })]; // TODO IE 非対応
   },
+
+  /**
+   * @param hand
+   * @param propName
+   * @returns {*}
+   */
   getHandProp: function getHandProp(hand, propName) {
     return hand[propName];
   },
+
+  /**
+   * @param players
+   * @param player
+   */
   applyPlayers: function applyPlayers(players, player) {
     players[this.getPlayerIdx(players, player.name)] = player;
   },
+
+  /**
+   * @param player
+   * @returns {boolean}
+   */
   isBreak: function isBreak(player) {
     var breakHands = player.hands.filter(function (h) {
       return h.score % 5 == 0;
     });
     return breakHands.length == player.hands.length;
   },
+
+  /**
+   * @param hands
+   * @param type
+   * @param attackScore
+   * @returns {*}
+   */
   getTurnAfterHands: function getTurnAfterHands(hands, type, attackScore) {
     var _this2 = this;
 
