@@ -29,10 +29,16 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var App = function App(props) {
+  // TODO stateの更新を子コンポーネントに任せてる。stateのルールから逸脱しているのでは？
   var _useState = (0, _react.useState)(0),
       _useState2 = _slicedToArray(_useState, 2),
       appStatus = _useState2[0],
-      setAppStatus = _useState2[1];
+      setAppStatusInner = _useState2[1];
+
+  var setAppStatus = function setAppStatus(status) {
+    console.log(status);
+    setAppStatusInner(status);
+  };
 
   return _react["default"].createElement(_react.Fragment, null, _react["default"].createElement(_Screen["default"], {
     appStatus: appStatus
@@ -340,8 +346,6 @@ var Stage = function Stage(props) {
 
 
   (0, _react.useEffect)(function () {
-    console.log("applied", turnIdx, attacker);
-
     if (attacker != user) {
       // user 以外の場合、攻撃の自動化
       setTimeout(function () {
@@ -349,7 +353,6 @@ var Stage = function Stage(props) {
 
         var toP = _core["default"].getPlayerWithIgnore(players, fromP);
 
-        console.log("toP", toP.name, ":fromP", fromP.name, attacker);
         onChangeTurn(toP.name, _core["default"].getAvailableHandType(toP), _core["default"].getAvailableHandType(fromP));
       }, 1500);
     }

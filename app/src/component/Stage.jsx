@@ -70,13 +70,11 @@ const Stage = (props) => {
     }
     // TODO 潜在的なバグ、 onChangeTurn実行時に players, turnIdxが更新されていなかった場合
     useEffect(() => {
-        console.log("applied", turnIdx, attacker);
         if (attacker != user) {
             // user 以外の場合、攻撃の自動化
             setTimeout((function () {
                 let fromP = core.getPlayer(players, attacker);
                 let toP = core.getPlayerWithIgnore(players, fromP);
-                console.log("toP", toP.name, ":fromP", fromP.name, attacker);
                 onChangeTurn(toP.name,
                     core.getAvailableHandType(toP),
                     core.getAvailableHandType(fromP));
