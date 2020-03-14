@@ -4,6 +4,14 @@ const _player = { hands : [] }
 const _hand = { score : 1, history : []};
 
 module.exports = {
+    STATUS : {
+        INIT: 0,
+        YOU_WIN: 1,
+        YOU_LOSS: 2,
+        DRAW: 3,
+        SELF_ATTACK: 4
+    },
+
     deepCopyPlayers(players) {
         return JSON.parse(JSON.stringify(players));
     },

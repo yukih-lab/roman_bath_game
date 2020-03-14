@@ -212,32 +212,85 @@ exports["default"] = _default;
 },{"react":19}],6:[function(require,module,exports){
 "use strict";
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
+
+var _core = _interopRequireDefault(require("../core.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var Screen = function Screen(props) {
-  // TODO appStatus に応じて表示画像の変更
-  // if (this.props.appStatus == '0') {
-  //
-  // }
+  var appStatus = props.appStatus;
+
+  var drewImageSrc = function drewImageSrc() {
+    var src;
+
+    switch (appStatus) {
+      case 1:
+      default:
+        src = "https://placehold.jp/430x200.png";
+        break;
+    }
+
+    return src;
+  };
+
+  var drewMessage = function drewMessage() {
+    var msg;
+
+    switch (appStatus) {
+      case _core["default"].STATUS.INIT:
+        msg = "開始";
+        break;
+
+      case _core["default"].STATUS.YOU_WIN:
+        msg = "君はたいした男だ。今度のローマ軍の遠征に参加しないか？";
+        break;
+
+      case _core["default"].STATUS.YOU_LOSS:
+        msg = "君の負けだ。";
+        break;
+
+      case _core["default"].STATUS.DRAW:
+        msg = "いつまでやる？もうやめよう";
+        break;
+
+      case _core["default"].STATUS.SELF_ATTACK:
+        msg = "自分に攻撃しちゃダメでしょ";
+        break;
+
+      default:
+        throw Error("illegalArgumentsException");
+        break;
+    }
+
+    return msg;
+  };
+
   return _react["default"].createElement("div", {
     className: "screen"
   }, _react["default"].createElement("img", {
-    src: "https://placehold.jp/430x200.png",
+    src: drewImageSrc(),
     title: "dummy"
-  }));
+  }), _react["default"].createElement("div", {
+    className: "message"
+  }, drewMessage()));
 };
 
 var _default = Screen;
 exports["default"] = _default;
 
-},{"react":19}],7:[function(require,module,exports){
+},{"../core.js":8,"react":19}],7:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -267,13 +320,6 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var GAME_STATUS = {
-  INIT: 0,
-  YOU_WIN: 1,
-  YOU_LOSS: 2,
-  DRAW: 3,
-  SELF_ATTACK: 4
-};
 var user = "user";
 var opponent = "opponent";
 
@@ -298,7 +344,7 @@ var Stage = function Stage(props) {
     console.log(turnIdx, attacker, toName);
 
     if (attacker == toName) {
-      props.setAppStatus(GAME_STATUS.SELF_ATTACK);
+      props.setAppStatus(_core["default"].STATUS.SELF_ATTACK);
       console.log("self attacked");
       return;
     } // turnAfter process
@@ -320,9 +366,9 @@ var Stage = function Stage(props) {
 
     if (_core["default"].isBreak(toP)) {
       if (toP.name == user) {
-        props.setAppStatus(GAME_STATUS.YOU_LOSS);
+        props.setAppStatus(_core["default"].STATUS.YOU_LOSS);
       } else {
-        props.setAppStatus(GAME_STATUS.YOU_WIN);
+        props.setAppStatus(_core["default"].STATUS.YOU_WIN);
       }
 
       console.log(toP.name, " before Players isBreak");
@@ -384,6 +430,13 @@ var _hand = {
   history: []
 };
 module.exports = {
+  STATUS: {
+    INIT: 0,
+    YOU_WIN: 1,
+    YOU_LOSS: 2,
+    DRAW: 3,
+    SELF_ATTACK: 4
+  },
   deepCopyPlayers: function deepCopyPlayers(players) {
     return JSON.parse(JSON.stringify(players));
   },
