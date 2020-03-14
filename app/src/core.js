@@ -4,6 +4,9 @@ const _player = { hands : [] }
 const _hand = { score : 1, history : []};
 
 module.exports = {
+    deepCopyPlayers(players) {
+        return JSON.parse(JSON.stringify(players));
+    },
     /**
      * 引数.nameよりPlayer生成
      * @param name
