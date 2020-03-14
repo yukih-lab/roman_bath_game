@@ -453,6 +453,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+var GAME_STATUS = {
+  INIT: 0,
+  YOU_WIN: 1,
+  YOU_LOSS: 2,
+  DRAW: 3,
+  SELF_ATTACK: 4
+};
 var user = "user";
 var opponent = "opponent";
 
@@ -481,8 +488,7 @@ function (_React$Component) {
     value: function onChangeTurn(toName, toType, fromType) {
       // toName == attackerの場合、自分攻撃と判断
       if (this.state.attacker == toName) {
-        this.props.setAppStatus(5); // TODO 定数化
-
+        this.props.setAppStatus(GAME_STATUS.SELF_ATTACK);
         console.log("self attacked");
         return;
       }
@@ -706,13 +712,21 @@ module.exports = {
   },
 
   /**
-   * 引数.typeの現在のスコアを取得
+   * playerをplayersに適用
+   * @param players
    * @param player
-   * @param type
+   */
+  applyPlayers: function applyPlayers(players, player) {
+    players[this.getPlayerIdx(players, player.name)] = player;
+  },
+
+  /**
+   * @param players
+   * @param turnIdx
    * @returns {*}
    */
-  getHandScore: function getHandScore(player, type) {
-    return this.getHandProp(this.getHand(player, type), "score");
+  getTurnPlayer: function getTurnPlayer(players, turnIdx) {
+    return players[turnIdx % players.length];
   },
 
   /**
@@ -727,12 +741,13 @@ module.exports = {
   },
 
   /**
-   * @param players
-   * @param turnIdx
+   * 引数.typeの現在のスコアを取得
+   * @param player
+   * @param type
    * @returns {*}
    */
-  getTurnPlayer: function getTurnPlayer(players, turnIdx) {
-    return players[turnIdx % players.length];
+  getHandScore: function getHandScore(player, type) {
+    return this.getHandProp(this.getHand(player, type), "score");
   },
 
   /**
@@ -744,34 +759,6 @@ module.exports = {
     return player.hands[player.hands.findIndex(function (h) {
       return h.type == type;
     })]; // TODO IE 非対応
-  },
-
-  /**
-   * @param hand
-   * @param propName
-   * @returns {*}
-   */
-  getHandProp: function getHandProp(hand, propName) {
-    return hand[propName];
-  },
-
-  /**
-   * @param players
-   * @param player
-   */
-  applyPlayers: function applyPlayers(players, player) {
-    players[this.getPlayerIdx(players, player.name)] = player;
-  },
-
-  /**
-   * @param player
-   * @returns {boolean}
-   */
-  isBreak: function isBreak(player) {
-    var breakHands = player.hands.filter(function (h) {
-      return h.score % 5 == 0;
-    });
-    return breakHands.length == player.hands.length;
   },
 
   /**
@@ -794,6 +781,26 @@ module.exports = {
 
       return h;
     });
+  },
+
+  /**
+   * @param hand
+   * @param propName
+   * @returns {*}
+   */
+  getHandProp: function getHandProp(hand, propName) {
+    return hand[propName];
+  },
+
+  /**
+   * @param player
+   * @returns {boolean}
+   */
+  isBreak: function isBreak(player) {
+    var breakHands = player.hands.filter(function (h) {
+      return h.score % 5 == 0;
+    });
+    return breakHands.length == player.hands.length;
   }
 };
 

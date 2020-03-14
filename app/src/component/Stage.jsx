@@ -2,6 +2,13 @@ import React from 'react';
 import Player from "./Player.jsx";
 import core from "../core.js";
 
+const GAME_STATUS = {
+    INIT : 0,
+    YOU_WIN : 1,
+    YOU_LOSS : 2,
+    DRAW : 3,
+    SELF_ATTACK : 4
+};
 const user = "user";
 const opponent = "opponent";
 class Stage extends React.Component  {
@@ -20,7 +27,7 @@ class Stage extends React.Component  {
     onChangeTurn(toName, toType, fromType) {
         // toName == attackerの場合、自分攻撃と判断
         if (this.state.attacker == toName) {
-            this.props.setAppStatus(5);// TODO 定数化
+            this.props.setAppStatus(GAME_STATUS.SELF_ATTACK);
             console.log("self attacked");
             return;
         }

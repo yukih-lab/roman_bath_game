@@ -92,8 +92,7 @@ module.exports = {
                     break;
                 }
                 ignores.push(toScoreIdx);
-            } catch (e) { /* NOP */
-            }
+            } catch (e) { /* NOP */ }
         }
         return player.hands[retIdx].type;
     },
@@ -107,21 +106,12 @@ module.exports = {
         return players.findIndex(p => p.name == name);// TODO IE 非対応
     },
     /**
-     * 引数.typeの現在のスコアを取得
-     * @param player
-     * @param type
-     * @returns {*}
-     */
-    getHandScore(player, type) {
-        return this.getHandProp(this.getHand(player, type), "score")
-    },
-    /**
+     * playerをplayersに適用
      * @param players
-     * @param name
-     * @returns {*}
+     * @param player
      */
-    getPlayer(players, name){
-        return players[players.findIndex(p => p.name == name)];// TODO IE 非対応
+    applyPlayers(players, player) {
+        players[this.getPlayerIdx(players, player.name)]  = player;
     },
     /**
      * @param players
@@ -132,35 +122,29 @@ module.exports = {
         return players[turnIdx % players.length];
     },
     /**
+     * @param players
+     * @param name
+     * @returns {*}
+     */
+    getPlayer(players, name){
+        return players[players.findIndex(p => p.name == name)];// TODO IE 非対応
+    },
+    /**
+     * 引数.typeの現在のスコアを取得
+     * @param player
+     * @param type
+     * @returns {*}
+     */
+    getHandScore(player, type) {
+        return this.getHandProp(this.getHand(player, type), "score")
+    },
+    /**
      * @param player
      * @param type
      * @returns {*}
      */
     getHand(player, type){
         return player.hands[player.hands.findIndex(h => h.type == type)];// TODO IE 非対応
-    },
-    /**
-     * @param hand
-     * @param propName
-     * @returns {*}
-     */
-    getHandProp(hand, propName){
-        return hand[propName];
-    },
-    /**
-     * @param players
-     * @param player
-     */
-    applyPlayers(players, player) {
-        players[this.getPlayerIdx(players, player.name)]  = player;
-    },
-    /**
-     * @param player
-     * @returns {boolean}
-     */
-    isBreak(player){
-        let breakHands = player.hands.filter(h => h.score % 5 == 0);
-        return breakHands.length == player.hands.length;
     },
     /**
      * @param hands
@@ -176,5 +160,21 @@ module.exports = {
             }
             return h;
         });
+    },
+    /**
+     * @param hand
+     * @param propName
+     * @returns {*}
+     */
+    getHandProp(hand, propName){
+        return hand[propName];
+    },
+    /**
+     * @param player
+     * @returns {boolean}
+     */
+    isBreak(player){
+        let breakHands = player.hands.filter(h => h.score % 5 == 0);
+        return breakHands.length == player.hands.length;
     }
 };

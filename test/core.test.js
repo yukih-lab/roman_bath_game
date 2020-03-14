@@ -67,7 +67,7 @@ function test(func, predicate){
     return (predicate(func()) ? "OK" : "NG") + " : " + func();
 }
 
-// _md5();
-// _getRandomInt();
-// _getRandomIntWithIgnore();
-_getPlayerWithIgnore();
+ _md5();
+ _getRandomInt();
+ _getRandomIntWithIgnore();
+ _getPlayerWithIgnore();
