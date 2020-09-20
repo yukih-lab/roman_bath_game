@@ -1,6 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -18,68 +20,37 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+var App = function App(props) {
+  // TODO stateの更新を子コンポーネントに任せてる。stateのルールから逸脱しているのでは？
+  var _useState = (0, _react.useState)(0),
+      _useState2 = _slicedToArray(_useState, 2),
+      appStatus = _useState2[0],
+      setAppStatusInner = _useState2[1];
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+  var setAppStatus = function setAppStatus(status) {
+    console.log(status);
+    setAppStatusInner(status);
+  };
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+  return _react["default"].createElement(_react.Fragment, null, _react["default"].createElement(_Screen["default"], {
+    appStatus: appStatus
+  }), _react["default"].createElement(_Stage["default"], {
+    setAppStatus: setAppStatus
+  }));
+};
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var App =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(App, _React$Component);
-
-  function App(props) {
-    var _this;
-
-    _classCallCheck(this, App);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
-    _this.state = {
-      appStatus: 0
-    };
-    _this.setAppStatus = _this.setAppStatus.bind(_assertThisInitialized(_this));
-    return _this;
-  }
-
-  _createClass(App, [{
-    key: "setAppStatus",
-    value: function setAppStatus(appStatus) {
-      this.setState({
-        appStatus: appStatus
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return _react["default"].createElement(_react.Fragment, null, _react["default"].createElement(_Screen["default"], {
-        appStatus: this.props.appStatus
-      }), _react["default"].createElement(_Stage["default"], {
-        setAppStatus: this.setAppStatus
-      }));
-    }
-  }]);
-
-  return App;
-}(_react["default"].Component);
-
-;
 var _default = App;
 exports["default"] = _default;
 
-},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":18}],2:[function(require,module,exports){
+},{"./component/Screen.jsx":6,"./component/Stage.jsx":7,"react":19}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -95,68 +66,32 @@ var _History = _interopRequireDefault(require("./History.jsx"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var Hand = function Hand(props) {
+  var type = props.type,
+      score = props.score,
+      canAttack = props.canAttack,
+      history = props.history;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var onChange = function onChange(fromHandType) {
+    props.onChange(type, fromHandType);
+  };
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  return _react["default"].createElement("div", {
+    className: "hand " + type
+  }, _react["default"].createElement(_Score["default"], {
+    type: score % 5 == 0 ? "break" : "current",
+    score: score,
+    canAttack: canAttack,
+    onChange: onChange
+  }), _react["default"].createElement(_History["default"], {
+    scores: history
+  }));
+};
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var Hand =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Hand, _React$Component);
-
-  function Hand(props) {
-    var _this;
-
-    _classCallCheck(this, Hand);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Hand).call(this, props));
-    _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
-    return _this;
-  }
-
-  _createClass(Hand, [{
-    key: "onChange",
-    value: function onChange(fromHandType) {
-      this.props.onChange(this.props.type, fromHandType);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return _react["default"].createElement("div", {
-        className: "hand " + this.props.type
-      }, _react["default"].createElement(_Score["default"], {
-        type: this.props.score % 5 == 0 ? "break" : "current",
-        score: this.props.score,
-        canAttack: this.props.canAttack,
-        onChange: this.onChange
-      }), _react["default"].createElement(_History["default"], {
-        scores: this.props.history
-      }));
-    }
-  }]);
-
-  return Hand;
-}(_react["default"].Component);
-
-;
 var _default = Hand;
 exports["default"] = _default;
 
-},{"./History.jsx":3,"./Score.jsx":5,"react":18}],3:[function(require,module,exports){
+},{"./History.jsx":3,"./Score.jsx":5,"react":19}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -185,7 +120,7 @@ var History = function History(props) {
 var _default = History;
 exports["default"] = _default;
 
-},{"./Score.jsx":5,"react":18}],4:[function(require,module,exports){
+},{"./Score.jsx":5,"react":19}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -199,73 +134,33 @@ var _Hand = _interopRequireDefault(require("./Hand.jsx"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var Player = function Player(props) {
+  var name = props.name,
+      hands = props.hands,
+      canAttack = props.canAttack;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var onChange = function onChange(toHandType, fromHandType) {
+    props.onChangeTurn(name, toHandType, fromHandType);
+  };
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  return _react["default"].createElement("div", {
+    className: 'player ' + name
+  }, hands.map(function (h, idx) {
+    return _react["default"].createElement(_Hand["default"], {
+      key: idx,
+      type: h.type,
+      score: h.score,
+      history: h.history,
+      canAttack: canAttack,
+      onChange: onChange
+    });
+  }));
+};
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var Player =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Player, _React$Component);
-
-  function Player(props) {
-    var _this;
-
-    _classCallCheck(this, Player);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Player).call(this, props));
-    _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
-    return _this;
-  }
-
-  _createClass(Player, [{
-    key: "onChange",
-    value: function onChange(toHandType, fromHandType) {
-      this.props.onChangeTurn(this.props.name, toHandType, fromHandType);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      // canAttack
-      return _react["default"].createElement("div", {
-        className: 'player ' + this.props.name
-      }, this.props.hands.map(function (h, idx) {
-        return _react["default"].createElement(_Hand["default"], {
-          key: idx,
-          type: h.type,
-          score: h.score,
-          history: h.history,
-          canAttack: _this2.props.canAttack,
-          onChange: _this2.onChange
-        });
-      }));
-    }
-  }]);
-
-  return Player;
-}(_react["default"].Component);
-
-;
 var _default = Player;
 exports["default"] = _default;
 
-},{"./Hand.jsx":2,"react":18}],5:[function(require,module,exports){
+},{"./Hand.jsx":2,"react":19}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -276,378 +171,521 @@ exports["default"] = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var getHandType = function getHandType(classSelector) {
   var regex = /(left|right)/g;
   return classSelector.match(regex)[0];
 };
 
-var Score =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Score, _React$Component);
+var Score = function Score(props) {
+  var type = props.type,
+      canAttack = props.canAttack,
+      score = props.score;
 
-  function Score(props) {
-    var _this;
+  var onDragStart = function onDragStart(e) {
+    var handType = getHandType(e.target.parentNode.className);
+    e.dataTransfer.setData("text/plain", handType);
+    e.dataTransfer.dropEffect = "copy";
+  };
 
-    _classCallCheck(this, Score);
+  var onDragOver = function onDragOver(e) {
+    e.preventDefault();
+  };
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Score).call(this, props));
-    _this.onDragStart = _this.onDragStart.bind(_assertThisInitialized(_this)); // TODO bindは不要、thisコンテキストを必要としていない
+  var onDragStop = function onDragStop(e) {
+    var handType = e.dataTransfer.getData("text/plain");
+    props.onChange(handType);
+  };
 
-    _this.onDragStop = _this.onDragStop.bind(_assertThisInitialized(_this));
-    return _this;
-  }
+  return _react["default"].createElement("div", {
+    className: "score " + type,
+    draggable: canAttack,
+    onDragStart: onDragStart,
+    onDragOver: onDragOver,
+    onDrop: onDragStop
+  }, score);
+};
 
-  _createClass(Score, [{
-    key: "onDragStart",
-    value: function onDragStart(e) {
-      var handType = getHandType(e.target.parentNode.className);
-      e.dataTransfer.setData("text/plain", handType);
-      e.dataTransfer.dropEffect = "copy";
-    }
-  }, {
-    key: "onDragOver",
-    value: function onDragOver(e) {
-      e.preventDefault();
-    }
-  }, {
-    key: "onDragStop",
-    value: function onDragStop(e) {
-      var handType = e.dataTransfer.getData("text/plain");
-      this.props.onChange(handType);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return _react["default"].createElement("div", {
-        className: "score " + this.props.type,
-        draggable: this.props.canAttack,
-        onDragStart: this.onDragStart,
-        onDragOver: this.onDragOver,
-        onDrop: this.onDragStop
-      }, this.props.score);
-    }
-  }]);
-
-  return Score;
-}(_react["default"].Component);
-
-;
 var _default = Score;
 exports["default"] = _default;
 
-},{"react":18}],6:[function(require,module,exports){
+},{"react":19}],6:[function(require,module,exports){
 "use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
+
+var _core = _interopRequireDefault(require("../core.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var Screen = function Screen(props) {
+  var appStatus = props.appStatus;
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  var drewImageSrc = function drewImageSrc() {
+    var src;
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var Screen =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Screen, _React$Component);
-
-  function Screen(props) {
-    _classCallCheck(this, Screen);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Screen).call(this, props));
-  }
-
-  _createClass(Screen, [{
-    key: "render",
-    value: function render() {
-      // TODO appStatus に応じて表示画像の変更
-      // if (this.props.appStatus == '0') {
-      //
-      // }
-      return _react["default"].createElement("div", {
-        className: "screen"
-      }, _react["default"].createElement("img", {
-        src: "https://placehold.jp/430x200.png",
-        title: "dummy"
-      }));
+    switch (appStatus) {
+      case 1:
+      default:
+        src = "https://placehold.jp/430x200.png";
+        break;
     }
-  }]);
 
-  return Screen;
-}(_react["default"].Component);
+    return src;
+  };
 
-;
+  var drewMessage = function drewMessage() {
+    var msg;
+
+    switch (appStatus) {
+      case _core["default"].STATUS.INIT:
+        msg = "開始";
+        break;
+
+      case _core["default"].STATUS.USER_SIDE:
+        msg = "君の番だ。";
+        break;
+
+      case _core["default"].STATUS.OPPONENT_SIDE:
+        msg = "さぁ、私が攻めるぞ。";
+        break;
+
+      case _core["default"].STATUS.YOU_WIN:
+        msg = "君はたいした男だ。今度のガリア遠征に参加しないか？";
+        break;
+
+      case _core["default"].STATUS.YOU_LOSS:
+        msg = "君の負けだ。";
+        break;
+
+      case _core["default"].STATUS.DRAW:
+        msg = "こんなことしてる場合じゃない！！ガリア人が反乱を起こしたというではないか！！！";
+        break;
+
+      case _core["default"].STATUS.SELF_ATTACK:
+        msg = "若人よ、自分を責めるな。";
+        break;
+
+      default:
+        throw Error("illegalArgumentsException");
+        break;
+    }
+
+    return msg;
+  };
+
+  return _react["default"].createElement("div", {
+    className: "screen"
+  }, _react["default"].createElement("img", {
+    src: drewImageSrc(),
+    title: "dummy"
+  }), _react["default"].createElement("div", {
+    className: "message"
+  }, drewMessage()));
+};
+
 var _default = Screen;
 exports["default"] = _default;
 
-},{"react":18}],7:[function(require,module,exports){
+},{"../core.js":8,"react":19}],7:[function(require,module,exports){
 "use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _Player = _interopRequireDefault(require("./Player.jsx"));
 
+var _core = _interopRequireDefault(require("../core.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var mod5 = function mod5(v) {
-  return v % 5;
-}; // TODO utilにまとめる
-
-
-var getRandomInt = function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-};
-
-var getRandomIntWithIgnore = function getRandomIntWithIgnore(max, ignore) {
-  var randomInt;
-
-  while (randomInt == undefined || randomInt == ignore) {
-    randomInt = getRandomInt(max);
-  }
-
-  return randomInt;
-};
-
-var getAvailableHandType = function getAvailableHandType(player) {
-  var toScoreIdx = getRandomInt(player.hands.length);
-  var nextScoreBefore = player.hands[toScoreIdx].score;
-  var loopLimit = player.hands.length;
-
-  while (nextScoreBefore == 0 && loopLimit > 0) {
-    toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
-    nextScoreBefore = player.hands[toScoreIdx].score;
-    loopLimit--;
-  }
-
-  return player.hands[toScoreIdx].type;
-};
-
-var getPlayerIdx = function getPlayerIdx(players, name) {
-  return players.findIndex(function (p) {
-    return p.name == name;
-  }); // TODO IE 非対応
-};
-
-var getHandScore = function getHandScore(hands, type) {
-  return hands[hands.findIndex(function (h) {
-    return h.type == type;
-  })].score;
-};
-
-var isBreak = function isBreak(player) {
-  var breakHands = player.hands.filter(function (h) {
-    return h.score % 5 == 0;
-  });
-  return breakHands.length == player.hands.length;
-};
-
-var getTurnAfterHands = function getTurnAfterHands(player, type, attackScore) {
-  console.log(player, attackScore);
-  return player.hands.map(function (h) {
-    h.history.unshift({
-      score: h.score
-    });
-
-    if (type == h.type) {
-      h.score = mod5(h.score + attackScore);
-    }
-
-    return h;
-  });
-};
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var user = "user";
 var opponent = "opponent";
 
-var Stage =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Stage, _React$Component);
+var Stage = function Stage(props) {
+  var _useState = (0, _react.useState)(0),
+      _useState2 = _slicedToArray(_useState, 2),
+      turnIdx = _useState2[0],
+      setTurn = _useState2[1];
 
-  function Stage(props) {
-    var _this;
+  var _useState3 = (0, _react.useState)(user),
+      _useState4 = _slicedToArray(_useState3, 2),
+      attacker = _useState4[0],
+      setAttacker = _useState4[1];
 
-    _classCallCheck(this, Stage);
+  var _useState5 = (0, _react.useState)([_core["default"].createPlayer(user), _core["default"].createPlayer(opponent)]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      players = _useState6[0],
+      setPlayers = _useState6[1];
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Stage).call(this, props));
-    _this.state = {
-      turnIdx: 0,
-      attacker: user,
-      players: [{
-        name: user,
-        hands: [{
-          type: "left",
-          score: 1,
-          history: []
-        }, {
-          type: "right",
-          score: 1,
-          history: []
-        }]
-      }, {
-        name: opponent,
-        hands: [{
-          type: "left",
-          score: 1,
-          history: []
-        }, {
-          type: "right",
-          score: 1,
-          history: []
-        }]
-      }]
-    };
-    _this.onChangeTurn = _this.onChangeTurn.bind(_assertThisInitialized(_this));
-    return _this;
-  }
+  var onChangeTurn = function onChangeTurn(toName, toType, fromType) {
+    // toName == attackerの場合、自分攻撃と判断
+    console.log(turnIdx, attacker, toName);
 
-  _createClass(Stage, [{
-    key: "onChangeTurn",
-    value: function onChangeTurn(name, type, fromType) {
-      // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
-      // TODO name == attackerの場合、自分攻撃と判断できる。
-      if (this.state.attacker == name) {
-        console.log("self attacked");
-        return;
+    if (attacker == toName) {
+      props.setAppStatus(_core["default"].STATUS.SELF_ATTACK);
+      console.log("self attacked");
+      return;
+    } // TODO ヒストリーからドロー判定、おんなじパターンループが複数続けば
+    // turnAfter process
+    // toP 被攻撃側
+
+
+    var toP = _core["default"].getPlayer(players, toName);
+
+    if (_core["default"].getHandScore(toP, toType) == 0) {
+      console.log("target hand is zero. its disabled attacked.");
+      return;
+    } // fromP 攻撃側
+
+
+    var fromP = _core["default"].getPlayer(players, attacker); // toPに対しfromPの攻撃を適用
+
+
+    toP.hands = _core["default"].getTurnAfterHands(toP.hands, toType, _core["default"].getHandScore(fromP, fromType)); // すべてのHandsが使用不可の場合、敗北と判定
+
+    if (_core["default"].isBreak(toP)) {
+      if (toP.name == user) {
+        props.setAppStatus(_core["default"].STATUS.YOU_LOSS);
+      } else {
+        props.setAppStatus(_core["default"].STATUS.YOU_WIN);
       }
 
-      var players = this.state.players; // turnAfter process
-      // attacker
-
-      var attacker = players[getPlayerIdx(players, this.state.attacker)];
-      var attackScore = getHandScore(attacker.hands, fromType); // attacked
-
-      var attackedPlayer = players[getPlayerIdx(players, name)];
-      var attackedHandScore = getHandScore(attackedPlayer.hands, type);
-
-      if (attackedHandScore == 0) {
-        console.log("target hand is zero. its disabled attacked.");
-        return;
-      }
-
-      attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
-      players[getPlayerIdx(players, name)] = attackedPlayer; // すべてのHandsが使用不可の場合、敗北と判定
-
-      if (isBreak(attackedPlayer)) {
-        this.props.setAppStatus(9); // TODO 定数化
-
-        console.log(attackedPlayer.name, " before Players isBreak");
-        return;
-      } // change turn process
+      console.log(toP.name, " before Players isBreak");
+      return;
+    } // playersにtoPの変更を適用
 
 
-      var idx = this.state.turnIdx;
-      idx++;
-      var fromIdx = idx % players.length; // automation attack process
+    var _players = _core["default"].deepCopyPlayers(players);
 
-      var fromPlayer = players[fromIdx];
-      this.setState({
-        turnIdx: idx,
-        players: players,
-        attacker: fromPlayer.name
-      });
+    _core["default"].applyPlayers(_players, toP); // change turn
 
-      if (fromPlayer.name != user) {
-        // user 以外の場合、攻撃の自動化
-        setTimeout(function () {
-          // 攻撃可能な値
-          var fromHandType = getAvailableHandType(fromPlayer); // 被攻撃相手(TODO 生存している人に絞る）
 
-          var toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
-          var toHandType = getAvailableHandType(toPlayer);
-          this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
-        }.bind(this), 1500);
-      }
+    var idx = turnIdx;
+    idx++;
+    fromP = _core["default"].getTurnPlayer(players, idx);
+    setTurn(idx);
+    setAttacker(fromP.name);
+    setPlayers(_players);
+    console.log("argument", idx, fromP.name);
+  }; // TODO 潜在的なバグ、 onChangeTurn実行時に players, turnIdxが更新されていなかった場合
+
+
+  (0, _react.useEffect)(function () {
+    if (attacker != user) {
+      // user 以外の場合、攻撃の自動化
+      props.setAppStatus(_core["default"].STATUS.OPPONENT_SIDE);
+      setTimeout(function () {
+        var fromP = _core["default"].getPlayer(players, attacker);
+
+        var toP = _core["default"].getPlayerWithIgnore(players, fromP);
+
+        onChangeTurn(toP.name, _core["default"].getAvailableHandType(toP), _core["default"].getAvailableHandType(fromP));
+      }, 1500);
+    } else {
+      props.setAppStatus(_core["default"].STATUS.USER_SIDE);
     }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
+  }, [attacker]);
+  return _react["default"].createElement("div", {
+    className: "stage"
+  }, players.map(function (p, idx) {
+    return _react["default"].createElement(_Player["default"], {
+      key: idx,
+      name: p.name,
+      hands: p.hands,
+      canAttack: attacker == user,
+      onChangeTurn: onChangeTurn
+    });
+  }));
+};
 
-      return _react["default"].createElement("div", {
-        className: "stage"
-      }, this.state.players.map(function (p, idx) {
-        return _react["default"].createElement(_Player["default"], {
-          key: idx,
-          name: p.name,
-          hands: p.hands,
-          canAttack: _this2.state.attacker == p.name && p.name == user,
-          onChangeTurn: _this2.onChangeTurn
-        });
-      }));
-    }
-  }]);
-
-  return Stage;
-}(_react["default"].Component);
-
-;
 var _default = Stage;
 exports["default"] = _default;
 
-},{"./Player.jsx":4,"react":18}],8:[function(require,module,exports){
+},{"../core.js":8,"./Player.jsx":4,"react":19}],8:[function(require,module,exports){
+'use strict';
+
+var _player = {
+  hands: []
+};
+var _hand = {
+  score: 1,
+  history: []
+};
+module.exports = {
+  STATUS: {
+    INIT: 0,
+    USER_SIDE: 1,
+    OPPONENT_SIDE: 2,
+    YOU_WIN: 3,
+    YOU_LOSS: 4,
+    DRAW: 5,
+    SELF_ATTACK: 6
+  },
+  deepCopyPlayers: function deepCopyPlayers(players) {
+    return JSON.parse(JSON.stringify(players));
+  },
+
+  /**
+   * 引数.nameよりPlayer生成
+   * @param name
+   * @returns {any}
+   */
+  createPlayer: function createPlayer(name) {
+    var p = Object.assign({
+      name: name
+    }, JSON.parse(JSON.stringify(_player)));
+    p.hands.push(this.createHand("left"));
+    p.hands.push(this.createHand("right"));
+    return p;
+  },
+
+  /**
+   * 引数.typeよりHandを生成
+   * @param type
+   * @returns {any}
+   */
+  createHand: function createHand(type) {
+    return Object.assign({
+      type: type
+    }, JSON.parse(JSON.stringify(_hand)));
+  },
+
+  /**
+   * 5で割ったあまりを返却
+   * @param v
+   * @returns {number}
+   */
+  mod5: function mod5(v) {
+    return v % 5;
+  },
+
+  /**
+   * 0<= x <= maxの乱数を返却
+   * @param max
+   * @returns {number}
+   */
+  getRandomInt: function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max + 1));
+  },
+
+  /**
+   * 0<= x <= maxの乱数のうちignoresに存在しない値を選択
+   * @param max
+   * @param max
+   * @param ignores
+   * @returns {*|number}
+   */
+  getRandomIntWithIgnore: function getRandomIntWithIgnore(max, ignores) {
+    var _this = this;
+
+    if (Array.isArray(ignores) == false) {
+      ignores = [ignores];
+    }
+
+    if (max < ignores.length) {
+      throw Error("illegalArgumentsException.");
+    }
+
+    var retInt;
+
+    var _loop = function _loop() {
+      var randomInt = _this.getRandomInt(max);
+
+      if (ignores.findIndex(function (idx) {
+        return idx == randomInt;
+      }) < 0) {
+        retInt = randomInt;
+        return "break";
+      }
+    };
+
+    while (true) {
+      var _ret = _loop();
+
+      if (_ret === "break") break;
+    }
+
+    return retInt;
+  },
+
+  /**
+   * ignorePを除く、任意のPlayerを取得
+   * @param players
+   * @param ignoreP
+   * @returns {*}
+   */
+  getPlayerWithIgnore: function getPlayerWithIgnore(players, ignoreP) {
+    return players[this.getRandomIntWithIgnore(players.length - 1, this.getPlayerIdx(players, ignoreP.name))];
+  },
+
+  /**
+   * Playerの生存している手を選択する.
+   * @param player
+   * @returns {*}
+   */
+  getAvailableHandType: function getAvailableHandType(player) {
+    if (this.isBreak(player)) {
+      throw Error("illegalArgumentsException.");
+    }
+
+    var max = player.hands.length - 1;
+    var ignores = [];
+    var retIdx;
+
+    while (true) {
+      try {
+        var toScoreIdx = this.getRandomIntWithIgnore(max, ignores);
+
+        if (player.hands[toScoreIdx].score > 0) {
+          retIdx = toScoreIdx;
+          break;
+        }
+
+        ignores.push(toScoreIdx);
+      } catch (e) {
+        /* NOP */
+      }
+    }
+
+    return player.hands[retIdx].type;
+  },
+
+  /**
+   * 引数.nameに紐づくplayerを取得.
+   * @param players
+   * @param name
+   * @returns {*|number}
+   */
+  getPlayerIdx: function getPlayerIdx(players, name) {
+    return players.findIndex(function (p) {
+      return p.name == name;
+    }); // TODO IE 非対応
+  },
+
+  /**
+   * playerをplayersに適用
+   * @param players
+   * @param player
+   */
+  applyPlayers: function applyPlayers(players, player) {
+    players[this.getPlayerIdx(players, player.name)] = player;
+  },
+
+  /**
+   * @param players
+   * @param turnIdx
+   * @returns {*}
+   */
+  getTurnPlayer: function getTurnPlayer(players, turnIdx) {
+    return players[turnIdx % players.length];
+  },
+
+  /**
+   * @param players
+   * @param name
+   * @returns {*}
+   */
+  getPlayer: function getPlayer(players, name) {
+    return players[players.findIndex(function (p) {
+      return p.name == name;
+    })]; // TODO IE 非対応
+  },
+
+  /**
+   * 引数.typeの現在のスコアを取得
+   * @param player
+   * @param type
+   * @returns {*}
+   */
+  getHandScore: function getHandScore(player, type) {
+    return this.getHandProp(this.getHand(player, type), "score");
+  },
+
+  /**
+   * @param player
+   * @param type
+   * @returns {*}
+   */
+  getHand: function getHand(player, type) {
+    return player.hands[player.hands.findIndex(function (h) {
+      return h.type == type;
+    })]; // TODO IE 非対応
+  },
+
+  /**
+   * @param hands
+   * @param type
+   * @param attackScore
+   * @returns {*}
+   */
+  getTurnAfterHands: function getTurnAfterHands(hands, type, attackScore) {
+    var _this2 = this;
+
+    return hands.map(function (h) {
+      h.history.unshift({
+        score: h.score
+      });
+
+      if (type == h.type) {
+        h.score = _this2.mod5(h.score + attackScore);
+      }
+
+      return h;
+    });
+  },
+
+  /**
+   * @param hand
+   * @param propName
+   * @returns {*}
+   */
+  getHandProp: function getHandProp(hand, propName) {
+    return hand[propName];
+  },
+
+  /**
+   * @param player
+   * @returns {boolean}
+   */
+  isBreak: function isBreak(player) {
+    var breakHands = player.hands.filter(function (h) {
+      return h.score % 5 == 0;
+    });
+    return breakHands.length == player.hands.length;
+  }
+};
+
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -663,7 +701,7 @@ window.addEventListener("load", function () {
   _reactDom["default"].render(_react["default"].createElement(_App["default"], null), document.getElementById('root'));
 }, false);
 
-},{"./App.jsx":1,"react":18,"react-dom":15}],9:[function(require,module,exports){
+},{"./App.jsx":1,"react":19,"react-dom":16}],10:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -755,7 +793,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -941,7 +979,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1047,7 +1085,7 @@ checkPropTypes.resetWarningCache = function() {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":12,"_process":10}],12:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":13,"_process":11}],13:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -1061,7 +1099,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react-dom.development.js
@@ -28792,7 +28830,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11,"react":18,"scheduler":23,"scheduler/tracing":24}],14:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12,"react":19,"scheduler":24,"scheduler/tracing":25}],15:[function(require,module,exports){
 /** @license React v16.11.0
  * react-dom.production.min.js
  *
@@ -29084,7 +29122,7 @@ xe,ye,Ca.injectEventPluginsByName,fa,Sc,function(a){ya(a,Rc)},cb,db,Pd,Ba,Sj,{cu
 (function(a){var b=a.findFiberByHostInstance;return ok(n({},a,{overrideHookState:null,overrideProps:null,setSuspenseHandler:null,scheduleUpdate:null,currentDispatcherRef:Ea.ReactCurrentDispatcher,findHostInstanceByFiber:function(a){a=ic(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null},findHostInstancesForRefresh:null,scheduleRefresh:null,scheduleRoot:null,setRefreshHandler:null,getCurrentFiber:null}))})({findFiberByHostInstance:Fc,bundleType:0,version:"16.11.0",
 rendererPackageName:"react-dom"});var Dk={default:Ck},Ek=Dk&&Ck||Dk;module.exports=Ek.default||Ek;
 
-},{"object-assign":9,"react":18,"scheduler":23}],15:[function(require,module,exports){
+},{"object-assign":10,"react":19,"scheduler":24}],16:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29126,7 +29164,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":13,"./cjs/react-dom.production.min.js":14,"_process":10}],16:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":14,"./cjs/react-dom.production.min.js":15,"_process":11}],17:[function(require,module,exports){
 (function (process){
 /** @license React v16.11.0
  * react.development.js
@@ -31448,7 +31486,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":10,"object-assign":9,"prop-types/checkPropTypes":11}],17:[function(require,module,exports){
+},{"_process":11,"object-assign":10,"prop-types/checkPropTypes":12}],18:[function(require,module,exports){
 /** @license React v16.11.0
  * react.production.min.js
  *
@@ -31475,7 +31513,7 @@ b,c){return W().useImperativeHandle(a,b,c)},useDebugValue:function(){},useLayout
 if(null!=b){void 0!==b.ref&&(g=b.ref,l=J.current);void 0!==b.key&&(d=""+b.key);if(a.type&&a.type.defaultProps)var f=a.type.defaultProps;for(k in b)K.call(b,k)&&!L.hasOwnProperty(k)&&(e[k]=void 0===b[k]&&void 0!==f?f[k]:b[k])}var k=arguments.length-2;if(1===k)e.children=c;else if(1<k){f=Array(k);for(var m=0;m<k;m++)f[m]=arguments[m+2];e.children=f}return{$$typeof:p,type:a.type,key:d,ref:g,props:e,_owner:l}},createFactory:function(a){var b=M.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.11.0",
 __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentDispatcher:I,ReactCurrentBatchConfig:{suspense:null},ReactCurrentOwner:J,IsSomeRendererActing:{current:!1},assign:h}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":9}],18:[function(require,module,exports){
+},{"object-assign":10}],19:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -31486,7 +31524,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":16,"./cjs/react.production.min.js":17,"_process":10}],19:[function(require,module,exports){
+},{"./cjs/react.development.js":17,"./cjs/react.production.min.js":18,"_process":11}],20:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler-tracing.development.js
@@ -31911,7 +31949,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],20:[function(require,module,exports){
+},{"_process":11}],21:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler-tracing.production.min.js
  *
@@ -31923,7 +31961,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (process){
 /** @license React v0.17.0
  * scheduler.development.js
@@ -32952,7 +32990,7 @@ exports.unstable_Profiling = unstable_Profiling;
 }
 
 }).call(this,require('_process'))
-},{"_process":10}],22:[function(require,module,exports){
+},{"_process":11}],23:[function(require,module,exports){
 /** @license React v0.17.0
  * scheduler.production.min.js
  *
@@ -32976,7 +33014,7 @@ exports.unstable_scheduleCallback=function(a,b,c){var d=exports.unstable_now();i
 exports.unstable_wrapCallback=function(a){var b=S;return function(){var c=S;S=b;try{return a.apply(this,arguments)}finally{S=c}}};exports.unstable_getCurrentPriorityLevel=function(){return S};exports.unstable_shouldYield=function(){var a=exports.unstable_now();W(a);var b=M(O);return b!==R&&null!==R&&null!==b&&null!==b.callback&&b.startTime<=a&&b.expirationTime<R.expirationTime||k()};exports.unstable_requestPaint=aa;exports.unstable_continueExecution=function(){U||T||(U=!0,f(Y))};
 exports.unstable_pauseExecution=function(){};exports.unstable_getFirstCallbackNode=function(){return M(O)};exports.unstable_Profiling=null;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32987,7 +33025,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":21,"./cjs/scheduler.production.min.js":22,"_process":10}],24:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":22,"./cjs/scheduler.production.min.js":23,"_process":11}],25:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32998,4 +33036,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":19,"./cjs/scheduler-tracing.production.min.js":20,"_process":10}]},{},[8]);
+},{"./cjs/scheduler-tracing.development.js":20,"./cjs/scheduler-tracing.production.min.js":21,"_process":11}]},{},[9]);

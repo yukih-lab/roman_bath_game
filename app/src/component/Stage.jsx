@@ -1,131 +1,98 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Player from "./Player.jsx";
-const mod5 = (v) => v % 5; // TODO utilにまとめる
-const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
-const getRandomIntWithIgnore = (max, ignore) => {
-    let randomInt;
-    while(randomInt == undefined || randomInt == ignore) {
-        randomInt = getRandomInt(max);
-    }
-    return randomInt;
-};
-const getAvailableHandType = (player) => {
-    let toScoreIdx = getRandomInt(player.hands.length);
-    let nextScoreBefore = player.hands[toScoreIdx].score;
-    let loopLimit = player.hands.length;
-    while (nextScoreBefore == 0 && loopLimit > 0) {
-        toScoreIdx = getRandomIntWithIgnore(player.hands.length, toScoreIdx);
-        nextScoreBefore = player.hands[toScoreIdx].score;
-        loopLimit--;
-    }
-    return player.hands[toScoreIdx].type;
-};
-const getPlayerIdx = (players, name) => {
-    return players.findIndex(p => p.name == name);// TODO IE 非対応
-};
-const getHandScore = (hands, type) => {
-    return hands[hands.findIndex(h => h.type == type)].score;
-};
-const isBreak = (player) => {
-    let breakHands = player.hands.filter(h => h.score % 5 == 0);
-    return breakHands.length == player.hands.length;
-};
-const getTurnAfterHands = (player, type, attackScore) => {
-    return player.hands.map(h => {
-            h.history.unshift({score: h.score});
-            if (type == h.type) {
-                h.score = mod5(h.score + attackScore);
-            }
-            return h;
-        });
-};
+import core from "../core.js";
+
 const user = "user";
 const opponent = "opponent";
-class Stage extends React.Component  {
-    constructor(props) {
-        super(props);
-        this.state = {
-            turnIdx : 0,
-            attacker : user,
-            players : [
-                { name : user,
-                  hands : [
-                      {type : "left" , score : 1, history : []},
-                      {type : "right" , score : 1, history : []}
-                  ]},
-                { name : opponent,
-                  hands : [
-                      {type : "left" , score : 1, history : []},
-                      {type : "right" , score : 1, history : []}
-                  ]}]
-        };
-        this.onChangeTurn = this.onChangeTurn.bind(this);
-    }
-    onChangeTurn(name, type, fromType) {
-        // TODO 攻撃者がだれかは、Stageが知っているから、どの手が攻撃してきたかを判定すればよい
-        // TODO name == attackerの場合、自分攻撃と判断できる。
-        if (this.state.attacker == name) {
+const Stage = (props) => {
+    const [turnIdx, setTurn] = useState(0);
+    const [attacker, setAttacker] = useState(user);
+    const [players, setPlayers] = useState([
+        core.createPlayer(user),
+        core.createPlayer(opponent)
+    ]);
+
+    const onChangeTurn = (toName, toType, fromType) => {
+        // toName == attackerの場合、自分攻撃と判断
+        console.log(turnIdx ,attacker, toName);
+        if (attacker == toName) {
+            props.setAppStatus(core.STATUS.SELF_ATTACK);
             console.log("self attacked");
             return;
         }
 
-        let players = this.state.players;
+        // TODO ヒストリーからドロー判定、おんなじパターンループが複数続けば
+
         // turnAfter process
-        // attacker
-        let attacker = players[getPlayerIdx(players, this.state.attacker)];
-        let attackScore = getHandScore(attacker.hands, fromType);
-        // attacked
-        let attackedPlayer = players[getPlayerIdx(players, name)];
-        let attackedHandScore = getHandScore(attackedPlayer.hands, type);
-        if (attackedHandScore == 0) {
+        // toP 被攻撃側
+        let toP = core.getPlayer(players, toName);
+        if (core.getHandScore(toP, toType) == 0) {
             console.log("target hand is zero. its disabled attacked.");
             return;
         }
-        attackedPlayer.hands = getTurnAfterHands(attackedPlayer, type, attackScore);
-        players[getPlayerIdx(players, name)] = attackedPlayer;
+        // fromP 攻撃側
+        let fromP = core.getPlayer(players, attacker);
+        // toPに対しfromPの攻撃を適用
+        toP.hands = core.getTurnAfterHands(
+            toP.hands,
+            toType,
+            core.getHandScore(fromP, fromType));
 
         // すべてのHandsが使用不可の場合、敗北と判定
-        if (isBreak(attackedPlayer)) {
-            this.props.setAppStatus(9);// TODO 定数化
-            console.log(attackedPlayer.name, " before Players isBreak");
+        if (core.isBreak(toP)) {
+            if (toP.name == user) {
+                props.setAppStatus(core.STATUS.YOU_LOSS);
+            } else {
+                props.setAppStatus(core.STATUS.YOU_WIN);
+            }
+            console.log(toP.name, " before Players isBreak");
             return;
         }
 
-        // change turn process
-        let idx = this.state.turnIdx;
+        // playersにtoPの変更を適用
+        let _players = core.deepCopyPlayers(players);
+        core.applyPlayers(_players, toP);
+
+        // change turn
+        let idx = turnIdx;
         idx++;
-        let fromIdx = idx % players.length; // automation attack process
-        let fromPlayer =  players[fromIdx];
-        this.setState({turnIdx : idx, players : players, attacker : fromPlayer.name});
+        fromP = core.getTurnPlayer(players, idx);
+        setTurn(idx);
+        setAttacker(fromP.name);
+        setPlayers(_players);
 
-        if (fromPlayer.name != user) {
-            // user 以外の場合、攻撃の自動化
-            setTimeout((function() {
-                // 攻撃可能な値
-                let fromHandType = getAvailableHandType(fromPlayer);
-                // 被攻撃相手(TODO 生存している人に絞る）
-                let toPlayer = players[getRandomIntWithIgnore(players.length, fromIdx)];
-                let toHandType = getAvailableHandType(toPlayer);
-                this.onChangeTurn(toPlayer.name, toHandType, fromHandType);
-            }).bind(this), 1500);
-        }
+        console.log("argument", idx, fromP.name);
     }
+    // TODO 潜在的なバグ、 onChangeTurn実行時に players, turnIdxが更新されていなかった場合
+    useEffect(() => {
+        if (attacker != user) {
+            // user 以外の場合、攻撃の自動化
+            props.setAppStatus(core.STATUS.OPPONENT_SIDE);
+            setTimeout((function () {
+                let fromP = core.getPlayer(players, attacker);
+                let toP = core.getPlayerWithIgnore(players, fromP);
+                onChangeTurn(toP.name,
+                    core.getAvailableHandType(toP),
+                    core.getAvailableHandType(fromP));
+            }), 1500);
+        } else {
+            props.setAppStatus(core.STATUS.USER_SIDE);
+        }
+    }, [attacker]);
 
-    render() {
-        return (
-            <div className="stage">
-                {
-                    this.state.players.map(
-                        (p, idx) => <Player
-                            key={idx}
-                            name={p.name}
-                            hands={p.hands}
-                            canAttack={ this.state.attacker == p.name && p.name == user }
-                            onChangeTurn = {this.onChangeTurn}
-                        />)
-                }
-            </div>
-        )
-    };
+    return (
+        <div className="stage">
+            {
+                players.map(
+                    (p, idx) => <Player
+                        key={idx}
+                        name={p.name}
+                        hands={p.hands}
+                        canAttack={attacker == user}
+                        onChangeTurn={onChangeTurn}
+                    />)
+            }
+        </div>
+    );
 };
 export default Stage;

@@ -1,115 +1,193 @@
 'use strict';
 
-const _player = {
-    l : 1,
-    r : 1
-};
-const l = "l", r = "r", ll = "ll", lr = "lr", rl = "rl", rr = "rr";
-const _strategyIds = [ ll, lr, rl, rr ];
+const _player = { hands : [] }
+const _hand = { score : 1, history : []};
+
 module.exports = {
-    strategyIds () {
-        // TODO コピーのキャッシュを持ちたい
-        return Array.from(_strategyIds);
+    STATUS : {
+        INIT: 0,
+        USER_SIDE: 1,
+        OPPONENT_SIDE: 2,
+        YOU_WIN: 3,
+        YOU_LOSS: 4,
+        DRAW: 5,
+        SELF_ATTACK: 6
     },
+
+    deepCopyPlayers(players) {
+        return JSON.parse(JSON.stringify(players));
+    },
+    /**
+     * 引数.nameよりPlayer生成
+     * @param name
+     * @returns {any}
+     */
     createPlayer (name) {
-        return Object.assign({name : name}, _player);
+        let p = Object.assign({name : name}, JSON.parse(JSON.stringify(_player)));
+        p.hands.push(this.createHand("left"));
+        p.hands.push(this.createHand("right"));
+        return p;
     },
-    isLoss (p) {
-        return this.isBreak(this.getL)(p)
-            && this.isBreak(this.getR)(p);
+    /**
+     * 引数.typeよりHandを生成
+     * @param type
+     * @returns {any}
+     */
+    createHand (type) {
+        return Object.assign(
+            {type : type},
+            JSON.parse(JSON.stringify(_hand)));
     },
-    isNoSide (p1, p2) {
-      return this.isLoss(p1) || this.isLoss(p2);
-    },
-    getL (p) {
-        return p.l;
-    },
-    getR (p) {
-        return p.r;
-    },
-    getLRById (id) {
-        switch(id) {
-            case l:
-                return this.getL;
-            case r:
-                return this.getR;
-            default:
-                throw new Error("Illegal Parameter id : " + id)
+    /**
+     * 5で割ったあまりを返却
+     * @param v
+     * @returns {number}
+     */
+    mod5: (v) => v % 5,
+    /**
+     * 0<= x <= maxの乱数を返却
+     * @param max
+     * @returns {number}
+     */
+    getRandomInt: max => Math.floor(Math.random() * Math.floor(max + 1)),
+    /**
+     * 0<= x <= maxの乱数のうちignoresに存在しない値を選択
+     * @param max
+     * @param max
+     * @param ignores
+     * @returns {*|number}
+     */
+    getRandomIntWithIgnore (max, ignores) {
+        if (Array.isArray(ignores) == false) {
+            ignores = [ignores];
         }
-    },
-    applyToL (f) {
-        // f関数の戻り値をpToの左手に適用
-        return function (pFrom, pTo) {
-            pTo.l += f(pFrom);
-        };
-    },
-    applyToR (f) {
-        // f関数の戻り値をpToの右手に適用
-        return function (pFrom, pTo) {
-            pTo.r += f(pFrom);
-        };
-    },
-    getStrategy (id) {
-        // 攻撃手関数を取得
-        switch (id) {
-            case ll:
-                return this.applyToL(this.getL);
-            case lr:
-                return this.applyToR(this.getL);
-            case rl:
-                return this.applyToL(this.getR);
-            case rr:
-                return this.applyToR(this.getR);
-            default:
-                throw new Error("Illegal Parameter id : " + id)
+        if (max < ignores.length) {
+            throw Error("illegalArgumentsException.");
         }
-    },
-    unUsableStrategy (pFrom, pTo, strategyId) {
-        // 攻め手の利用不可のケース判定
-        //   自身の攻め手が使用不可
-        // 　または
-        //   攻撃対象の相手方の手が使用不可
-        let from = strategyId.charAt(0);
-        let to = strategyId.charAt(1);
-        return this.isBreak(this.getLRById(from))(pFrom)
-            || this.isBreak(this.getLRById(to))(pTo);
-    },
-    isBreak (f) {
-        // 対象手がブレイクされているか否かを判定
-        return function(p) {
-            return f(p) % 5 == 0;
-        };
-    },
-    doStrategy(pFrom, pTo, nextStrategyId) {
-        // 攻め手実行
-        if (nextStrategyId == null) {
-            throw new Error("over scenario length.");
-        }
-        if (this.unUsableStrategy(pFrom, pTo, nextStrategyId)) {
-            throw new Error("illegal pattern :" + nextStrategyId + ".");
-        }
-        this.getStrategy(nextStrategyId)(pFrom, pTo);
-    },
-    doStrategyAutomatic(pFrom, pTo, nextStrategyId) {
-        // 攻め手のオート実行
-        // パラメータの攻め手Idxを保持
-        let paramStrategyIdx = _strategyIds.lastIndexOf(nextStrategyId);
-        // 攻め手が決まるまでループ
-        // 係数
-        let idx = 0;
-        while(this.unUsableStrategy(pFrom, pTo, nextStrategyId)) {
-            // 攻め手が見つからない場合、例外を発生させる
-            if (idx == _strategyIds.length) {
-                throw new Error("strategy not found.")
+        let retInt;
+        while (true) {
+            let randomInt = this.getRandomInt(max);
+            if (ignores.findIndex((idx) => idx == randomInt) < 0) {
+                retInt = randomInt;
+                break;
             }
-            //  攻め手利用不可の場合、攻め手の変更
-            if (idx == paramStrategyIdx) {
-                idx++;
-            }
-            nextStrategyId = _strategyIds[idx];
-            idx++;
         }
-        // 攻め手を実行
-        this.getStrategy(nextStrategyId)(pFrom, pTo);
+        return retInt;
+    },
+    /**
+     * ignorePを除く、任意のPlayerを取得
+     * @param players
+     * @param ignoreP
+     * @returns {*}
+     */
+    getPlayerWithIgnore(players, ignoreP) {
+        return players[
+            this.getRandomIntWithIgnore(players.length - 1, this.getPlayerIdx(players, ignoreP.name))
+            ];
+    },
+    /**
+     * Playerの生存している手を選択する.
+     * @param player
+     * @returns {*}
+     */
+    getAvailableHandType(player){
+        if (this.isBreak(player)) {
+            throw Error("illegalArgumentsException.");
+        }
+        let max = player.hands.length - 1;
+        let ignores = [];
+        let retIdx;
+        while (true) {
+            try {
+                let toScoreIdx = this.getRandomIntWithIgnore(max, ignores);
+                if (player.hands[toScoreIdx].score > 0) {
+                    retIdx = toScoreIdx;
+                    break;
+                }
+                ignores.push(toScoreIdx);
+            } catch (e) { /* NOP */ }
+        }
+        return player.hands[retIdx].type;
+    },
+    /**
+     * 引数.nameに紐づくplayerを取得.
+     * @param players
+     * @param name
+     * @returns {*|number}
+     */
+    getPlayerIdx(players, name){
+        return players.findIndex(p => p.name == name);// TODO IE 非対応
+    },
+    /**
+     * playerをplayersに適用
+     * @param players
+     * @param player
+     */
+    applyPlayers(players, player) {
+        players[this.getPlayerIdx(players, player.name)]  = player;
+    },
+    /**
+     * @param players
+     * @param turnIdx
+     * @returns {*}
+     */
+    getTurnPlayer(players, turnIdx) {
+        return players[turnIdx % players.length];
+    },
+    /**
+     * @param players
+     * @param name
+     * @returns {*}
+     */
+    getPlayer(players, name){
+        return players[players.findIndex(p => p.name == name)];// TODO IE 非対応
+    },
+    /**
+     * 引数.typeの現在のスコアを取得
+     * @param player
+     * @param type
+     * @returns {*}
+     */
+    getHandScore(player, type) {
+        return this.getHandProp(this.getHand(player, type), "score")
+    },
+    /**
+     * @param player
+     * @param type
+     * @returns {*}
+     */
+    getHand(player, type){
+        return player.hands[player.hands.findIndex(h => h.type == type)];// TODO IE 非対応
+    },
+    /**
+     * @param hands
+     * @param type
+     * @param attackScore
+     * @returns {*}
+     */
+    getTurnAfterHands(hands, type, attackScore){
+        return hands.map(h => {
+            h.history.unshift({score: h.score});
+            if (type == h.type) {
+                h.score = this.mod5(h.score + attackScore);
+            }
+            return h;
+        });
+    },
+    /**
+     * @param hand
+     * @param propName
+     * @returns {*}
+     */
+    getHandProp(hand, propName){
+        return hand[propName];
+    },
+    /**
+     * @param player
+     * @returns {boolean}
+     */
+    isBreak(player){
+        let breakHands = player.hands.filter(h => h.score % 5 == 0);
+        return breakHands.length == player.hands.length;
     }
 };
