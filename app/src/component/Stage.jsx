@@ -88,7 +88,7 @@ const Stage = (props) => {
                         key={idx}
                         name={p.name}
                         hands={p.hands}
-                        canAttack={attacker == user}
+                        canAttack={p.name == user && attacker == user}
                         onChangeTurn={onChangeTurn}
                     />)
             }
