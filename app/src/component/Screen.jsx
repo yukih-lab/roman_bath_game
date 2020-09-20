@@ -21,17 +21,23 @@ const Screen = (props) => {
             case core.STATUS.INIT:
                 msg = "開始";
                 break;
+            case core.STATUS.USER_SIDE:
+                msg = "君の番だ。";
+                break;
+            case core.STATUS.OPPONENT_SIDE:
+                msg = "さぁ、私が攻めるぞ。";
+                break;
             case core.STATUS.YOU_WIN:
-                msg = "君はたいした男だ。今度のローマ軍の遠征に参加しないか？";
+                msg = "君はたいした男だ。今度のガリア遠征に参加しないか？";
                 break;
             case core.STATUS.YOU_LOSS:
                 msg = "君の負けだ。";
                 break;
             case core.STATUS.DRAW:
-                msg = "いつまでやる？もうやめよう";
+                msg = "こんなことしてる場合じゃない！！ガリア人が反乱を起こしたというではないか！！！";
                 break;
             case core.STATUS.SELF_ATTACK:
-                msg = "自分に攻撃しちゃダメでしょ";
+                msg = "若人よ、自分を責めるな。";
                 break;
             default:
                 throw Error("illegalArgumentsException")

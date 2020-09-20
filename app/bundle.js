@@ -253,8 +253,16 @@ var Screen = function Screen(props) {
         msg = "開始";
         break;
 
+      case _core["default"].STATUS.USER_SIDE:
+        msg = "君の番だ。";
+        break;
+
+      case _core["default"].STATUS.OPPONENT_SIDE:
+        msg = "さぁ、私が攻めるぞ。";
+        break;
+
       case _core["default"].STATUS.YOU_WIN:
-        msg = "君はたいした男だ。今度のローマ軍の遠征に参加しないか？";
+        msg = "君はたいした男だ。今度のガリア遠征に参加しないか？";
         break;
 
       case _core["default"].STATUS.YOU_LOSS:
@@ -262,11 +270,11 @@ var Screen = function Screen(props) {
         break;
 
       case _core["default"].STATUS.DRAW:
-        msg = "いつまでやる？もうやめよう";
+        msg = "こんなことしてる場合じゃない！！ガリア人が反乱を起こしたというではないか！！！";
         break;
 
       case _core["default"].STATUS.SELF_ATTACK:
-        msg = "自分に攻撃しちゃダメでしょ";
+        msg = "若人よ、自分を責めるな。";
         break;
 
       default:
@@ -347,7 +355,8 @@ var Stage = function Stage(props) {
       props.setAppStatus(_core["default"].STATUS.SELF_ATTACK);
       console.log("self attacked");
       return;
-    } // turnAfter process
+    } // TODO ヒストリーからドロー判定、おんなじパターンループが複数続けば
+    // turnAfter process
     // toP 被攻撃側
 
 
@@ -394,6 +403,7 @@ var Stage = function Stage(props) {
   (0, _react.useEffect)(function () {
     if (attacker != user) {
       // user 以外の場合、攻撃の自動化
+      props.setAppStatus(_core["default"].STATUS.OPPONENT_SIDE);
       setTimeout(function () {
         var fromP = _core["default"].getPlayer(players, attacker);
 
@@ -401,6 +411,8 @@ var Stage = function Stage(props) {
 
         onChangeTurn(toP.name, _core["default"].getAvailableHandType(toP), _core["default"].getAvailableHandType(fromP));
       }, 1500);
+    } else {
+      props.setAppStatus(_core["default"].STATUS.USER_SIDE);
     }
   }, [attacker]);
   return _react["default"].createElement("div", {
@@ -432,10 +444,12 @@ var _hand = {
 module.exports = {
   STATUS: {
     INIT: 0,
-    YOU_WIN: 1,
-    YOU_LOSS: 2,
-    DRAW: 3,
-    SELF_ATTACK: 4
+    USER_SIDE: 1,
+    OPPONENT_SIDE: 2,
+    YOU_WIN: 3,
+    YOU_LOSS: 4,
+    DRAW: 5,
+    SELF_ATTACK: 6
   },
   deepCopyPlayers: function deepCopyPlayers(players) {
     return JSON.parse(JSON.stringify(players));

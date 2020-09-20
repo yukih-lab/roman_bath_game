@@ -21,6 +21,8 @@ const Stage = (props) => {
             return;
         }
 
+        // TODO ヒストリーからドロー判定、おんなじパターンループが複数続けば
+
         // turnAfter process
         // toP 被攻撃側
         let toP = core.getPlayer(players, toName);
@@ -65,6 +67,7 @@ const Stage = (props) => {
     useEffect(() => {
         if (attacker != user) {
             // user 以外の場合、攻撃の自動化
+            props.setAppStatus(core.STATUS.OPPONENT_SIDE);
             setTimeout((function () {
                 let fromP = core.getPlayer(players, attacker);
                 let toP = core.getPlayerWithIgnore(players, fromP);
@@ -72,6 +75,8 @@ const Stage = (props) => {
                     core.getAvailableHandType(toP),
                     core.getAvailableHandType(fromP));
             }), 1500);
+        } else {
+            props.setAppStatus(core.STATUS.USER_SIDE);
         }
     }, [attacker]);
 

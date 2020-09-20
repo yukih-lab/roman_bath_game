@@ -6,10 +6,12 @@ const _hand = { score : 1, history : []};
 module.exports = {
     STATUS : {
         INIT: 0,
-        YOU_WIN: 1,
-        YOU_LOSS: 2,
-        DRAW: 3,
-        SELF_ATTACK: 4
+        USER_SIDE: 1,
+        OPPONENT_SIDE: 2,
+        YOU_WIN: 3,
+        YOU_LOSS: 4,
+        DRAW: 5,
+        SELF_ATTACK: 6
     },
 
     deepCopyPlayers(players) {
